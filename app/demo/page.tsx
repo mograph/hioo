@@ -161,61 +161,60 @@ export default function DemoPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-6 py-20">
+    <div className="max-w-lg mx-auto px-5 py-10 pb-nav">
       <div className="text-center mb-8">
-        <h1 className="font-serif text-3xl font-medium text-[#1a1a1a] mb-3">Load Demo Data</h1>
-        <p className="text-[#6b6157] text-sm">
-          Populate your wardrobe with 26 realistic clothing items, 8 curated outfits, and 20 days of wear history.
-        </p>
+        <div className="inline-block bg-[#EDE9FE] rounded-full px-4 py-1.5 mb-4">
+          <span className="font-display text-sm font-bold text-[#6D28D9]">Demo Mode</span>
+        </div>
+        <h1 className="font-display text-3xl font-bold text-[#0A0A0A] tracking-tight mb-2">Load Demo Data</h1>
+        <p className="text-[#A3A3A3] text-sm">Fill your wardrobe with sample pieces to explore the app.</p>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#e0d6ca] p-6 shadow-sm text-center">
+      <div className="bg-white rounded-2xl border border-[#E5E5E5] p-6 text-center">
         {status === 'idle' && (
           <>
-            <div className="grid grid-cols-3 gap-4 mb-6 text-center">
-              <div>
-                <p className="font-serif text-2xl text-[#1a1a1a]">26</p>
-                <p className="text-xs text-[#6b6157]">Items</p>
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-[#FFE0D0] rounded-2xl p-4">
+                <p className="font-display text-3xl font-bold text-[#FF6B35]">26</p>
+                <p className="text-[10px] font-display font-bold text-[#525252] uppercase">Items</p>
               </div>
-              <div>
-                <p className="font-serif text-2xl text-[#1a1a1a]">8</p>
-                <p className="text-xs text-[#6b6157]">Outfits</p>
+              <div className="bg-[#E0F2FE] rounded-2xl p-4">
+                <p className="font-display text-3xl font-bold text-[#0369A1]">8</p>
+                <p className="text-[10px] font-display font-bold text-[#525252] uppercase">Outfits</p>
               </div>
-              <div>
-                <p className="font-serif text-2xl text-[#1a1a1a]">20</p>
-                <p className="text-xs text-[#6b6157]">Wear Logs</p>
+              <div className="bg-[#D1FAE5] rounded-2xl p-4">
+                <p className="font-display text-3xl font-bold text-[#047857]">20</p>
+                <p className="text-[10px] font-display font-bold text-[#525252] uppercase">Logs</p>
               </div>
             </div>
-            <button onClick={loadDemoData} className="btn-primary w-full !py-3">
-              Load Demo Wardrobe
-            </button>
+            <button onClick={loadDemoData} className="btn-primary w-full !py-3.5">Load Demo Wardrobe</button>
           </>
         )}
 
         {status === 'loading' && (
-          <div>
-            <div className="w-8 h-8 border-2 border-[#e0d6ca] border-t-[#c47d5a] rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-sm text-[#6b6157]">{progress}</p>
+          <div className="py-6">
+            <div className="w-10 h-10 border-2 border-[#E5E5E5] border-t-[#0A0A0A] rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm font-display font-semibold text-[#525252]">{progress}</p>
           </div>
         )}
 
         {status === 'done' && (
-          <div>
-            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <div className="py-4">
+            <div className="w-14 h-14 rounded-full bg-[#D1FAE5] flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">✅</span>
             </div>
-            <p className="text-sm text-[#1a1a1a] font-medium mb-1">Demo data loaded!</p>
-            <p className="text-xs text-[#6b6157] mb-6">{progress}</p>
-            <button onClick={() => router.push('/closet')} className="btn-primary w-full !py-3">
-              Go to My Closet
-            </button>
+            <p className="font-display font-bold text-[#0A0A0A] mb-1">Done!</p>
+            <p className="text-xs text-[#A3A3A3] mb-6">{progress}</p>
+            <button onClick={() => router.push('/closet')} className="btn-primary w-full !py-3.5">Go to Closet</button>
           </div>
         )}
 
         {status === 'error' && (
-          <div>
-            <p className="text-sm text-red-600 mb-4">{progress}</p>
-            <button onClick={loadDemoData} className="btn-primary w-full !py-3">Try Again</button>
+          <div className="py-4">
+            <div className="bg-[#FFE0E6] rounded-2xl p-4 mb-4">
+              <p className="text-sm text-[#BE123C] font-display font-bold">{progress}</p>
+            </div>
+            <button onClick={loadDemoData} className="btn-primary w-full !py-3.5">Try Again</button>
           </div>
         )}
       </div>
