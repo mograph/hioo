@@ -2,35 +2,25 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from './AuthContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHouse, faShirt, faCamera, faImages, faUser, faGrip, faCalendarDays, faChartLine, faLightbulb, faPerson, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 const tabs = [
-  { href: '/', label: 'Home', icon: (active: boolean) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-  )},
-  { href: '/closet', label: 'Closet', icon: (active: boolean) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="18" rx="3"/><line x1="12" y1="3" x2="12" y2="21"/><path d="M7 9h2M15 9h2"/></svg>
-  )},
-  { href: '/capture', label: 'Capture', icon: () => (
-    <div className="w-12 h-12 -mt-5 bg-[#0A0A0A] rounded-2xl flex items-center justify-center shadow-lg shadow-black/20">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-    </div>
-  )},
-  { href: '/moments', label: 'Diary', icon: (active: boolean) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-  )},
-  { href: '/profile', label: 'You', icon: (active: boolean) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
-  )},
+  { href: '/', label: 'Home', icon: faHouse },
+  { href: '/closet', label: 'Closet', icon: faShirt },
+  { href: '/capture', label: 'Capture', icon: faCamera, isCenter: true },
+  { href: '/moments', label: 'Diary', icon: faImages },
+  { href: '/profile', label: 'You', icon: faUser },
 ]
 
 const desktopLinks = [
-  { href: '/closet', label: 'Closet' },
-  { href: '/moments', label: 'Diary' },
-  { href: '/outfits', label: 'Outfits' },
-  { href: '/calendar', label: 'Calendar' },
-  { href: '/analytics', label: 'Analytics' },
-  { href: '/recommend', label: 'Suggest' },
-  { href: '/avatar', label: 'Try-On' },
+  { href: '/closet', label: 'Closet', icon: faShirt },
+  { href: '/moments', label: 'Diary', icon: faImages },
+  { href: '/outfits', label: 'Outfits', icon: faGrip },
+  { href: '/calendar', label: 'Calendar', icon: faCalendarDays },
+  { href: '/analytics', label: 'Analytics', icon: faChartLine },
+  { href: '/recommend', label: 'Suggest', icon: faLightbulb },
+  { href: '/avatar', label: 'Try-On', icon: faPerson },
 ]
 
 export default function Navigation() {
@@ -51,20 +41,21 @@ export default function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-full text-[13px] font-semibold font-display transition-all ${
+              className={`px-3 py-1.5 rounded-full text-[13px] font-semibold font-display transition-all flex items-center gap-1.5 ${
                 pathname === link.href
                   ? 'bg-[#0A0A0A] text-white'
                   : 'text-[#525252] hover:text-[#0A0A0A] hover:bg-[#F5F5F5]'
               }`}
             >
+              <FontAwesomeIcon icon={link.icon} className="w-3.5 h-3.5" />
               {link.label}
             </Link>
           ))}
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[13px] text-[#525252] font-medium">{user.displayName || user.email}</span>
-          <button onClick={() => signOut()} className="text-[13px] text-[#A3A3A3] hover:text-[#0A0A0A] font-medium">
-            Sign Out
+          <button onClick={() => signOut()} className="text-[#A3A3A3] hover:text-[#0A0A0A] transition-colors">
+            <FontAwesomeIcon icon={faRightFromBracket} className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -96,20 +87,25 @@ export default function Navigation() {
       <div className="flex items-end justify-around px-2 pt-2 pb-1">
         {tabs.map(tab => {
           const isActive = tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href)
-          const isCapture = tab.href === '/capture'
           return (
             <Link
               key={tab.href}
               href={tab.href}
               className={`flex flex-col items-center gap-0.5 min-w-[56px] py-1 ${
-                isCapture ? '' : isActive ? 'text-[#0A0A0A]' : 'text-[#A3A3A3]'
+                tab.isCenter ? '' : isActive ? 'text-[#0A0A0A]' : 'text-[#A3A3A3]'
               }`}
             >
-              {tab.icon(isActive)}
-              {!isCapture && (
-                <span className={`text-[10px] font-semibold font-display ${isActive ? 'text-[#0A0A0A]' : 'text-[#A3A3A3]'}`}>
-                  {tab.label}
-                </span>
+              {tab.isCenter ? (
+                <div className="w-12 h-12 -mt-5 bg-[#0A0A0A] rounded-2xl flex items-center justify-center shadow-lg shadow-black/20">
+                  <FontAwesomeIcon icon={tab.icon} className="w-5 h-5 text-white" />
+                </div>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={tab.icon} className="w-5 h-5" />
+                  <span className={`text-[10px] font-semibold font-display ${isActive ? 'text-[#0A0A0A]' : 'text-[#A3A3A3]'}`}>
+                    {tab.label}
+                  </span>
+                </>
               )}
             </Link>
           )
@@ -118,15 +114,13 @@ export default function Navigation() {
     </nav>
   )
 
-  // Mobile top bar (minimal, just logo)
+  // Mobile top bar
   const mobileTopBar = user && (
     <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl">
       <div className="px-5 flex items-center justify-between h-12">
         <span className="font-display text-lg font-bold text-[#0A0A0A] tracking-tight">hioo</span>
         <Link href="/profile" className="w-8 h-8 rounded-full bg-[#F5F5F5] flex items-center justify-center">
-          <span className="text-sm font-bold font-display text-[#525252]">
-            {(user.displayName || user.email || '?')[0].toUpperCase()}
-          </span>
+          <FontAwesomeIcon icon={faUser} className="w-3.5 h-3.5 text-[#525252]" />
         </Link>
       </div>
     </div>

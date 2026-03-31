@@ -4,6 +4,8 @@ import { useAuth } from '@/components/AuthContext'
 import { fetchWithAuth } from '@/lib/api'
 import { getOutfits, addMoment, addWearLog } from '@/lib/db'
 import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera, faArrowLeft, faXmark, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 const MOODS = [
   { emoji: '🔥', label: 'Fire' },
@@ -85,8 +87,8 @@ export default function CapturePage() {
     <div className="max-w-lg mx-auto px-4 py-6 min-h-[calc(100vh-56px)]">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <button onClick={() => router.back()} className="text-[#6b6157] hover:text-[#1a1a1a] p-1">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <button onClick={() => router.back()} className="text-[#A3A3A3] hover:text-[#0A0A0A] p-1">
+          <FontAwesomeIcon icon={faArrowLeft} className="w-5 h-5" />
         </button>
         <h1 className="font-serif text-xl font-medium text-[#1a1a1a]">Capture Moment</h1>
         <div className="w-8" />
@@ -108,10 +110,7 @@ export default function CapturePage() {
               <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-2xl" />
             ) : (
               <>
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9c8e80" strokeWidth="1.5">
-                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-                  <circle cx="12" cy="13" r="4" />
-                </svg>
+                <FontAwesomeIcon icon={faCamera} className="w-12 h-12 text-[#A3A3A3]" />
                 <p className="text-[#6b6157] font-medium mt-4">Tap to take a photo</p>
                 <p className="text-[#9c8e80] text-sm mt-1">or upload from your gallery</p>
               </>
@@ -236,7 +235,7 @@ export default function CapturePage() {
       {step === 'done' && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mb-4">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <FontAwesomeIcon icon={faCheck} className="w-8 h-8 text-green-500" />
           </div>
           <h2 className="font-serif text-2xl font-medium text-[#1a1a1a] mb-2">Moment captured!</h2>
           <p className="text-[#6b6157] text-sm mb-8">Your outfit has been saved to your diary.</p>

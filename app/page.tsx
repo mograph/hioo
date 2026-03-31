@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useAuth } from '@/components/AuthContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera, faImages, faShirt, faGrip, faCalendarDays, faChartLine, faLightbulb, faPerson, faFlask } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
   const { user, loading } = useAuth()
@@ -89,21 +91,17 @@ function AuthenticatedHome({ name }: { name: string }) {
   }
 
   const quickActions = [
-    { href: '/capture', title: 'Capture\nMoment', color: 'bg-[#B8F044]', textColor: 'text-[#0A0A0A]', icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-    )},
-    { href: '/moments', title: 'My\nDiary', color: 'bg-[#FFE0D0]', textColor: 'text-[#C2410C]', icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-    )},
+    { href: '/capture', title: 'Capture\nMoment', color: 'bg-[#B8F044]', textColor: 'text-[#0A0A0A]', icon: faCamera },
+    { href: '/moments', title: 'My\nDiary', color: 'bg-[#FFE0D0]', textColor: 'text-[#C2410C]', icon: faImages },
   ]
 
   const features = [
-    { href: '/closet', title: 'My Closet', desc: 'Browse pieces', color: 'bg-[#E0F2FE]', emoji: '👗' },
-    { href: '/outfits', title: 'Outfits', desc: 'Mix & match', color: 'bg-[#EDE9FE]', emoji: '✨' },
-    { href: '/calendar', title: 'Calendar', desc: 'Wear diary', color: 'bg-[#FEF9C3]', emoji: '📅' },
-    { href: '/analytics', title: 'Analytics', desc: 'Style stats', color: 'bg-[#D1FAE5]', emoji: '📊' },
-    { href: '/recommend', title: 'Suggest', desc: 'Get ideas', color: 'bg-[#FFE0E6]', emoji: '💡' },
-    { href: '/avatar', title: 'Try-On', desc: 'Virtual fit', color: 'bg-[#FFE0D0]', emoji: '🧍' },
+    { href: '/closet', title: 'My Closet', color: 'bg-[#E0F2FE]', icon: faShirt, iconColor: 'text-[#0369A1]' },
+    { href: '/outfits', title: 'Outfits', color: 'bg-[#EDE9FE]', icon: faGrip, iconColor: 'text-[#6D28D9]' },
+    { href: '/calendar', title: 'Calendar', color: 'bg-[#FEF9C3]', icon: faCalendarDays, iconColor: 'text-[#A16207]' },
+    { href: '/analytics', title: 'Analytics', color: 'bg-[#D1FAE5]', icon: faChartLine, iconColor: 'text-[#047857]' },
+    { href: '/recommend', title: 'Suggest', color: 'bg-[#FFE0E6]', icon: faLightbulb, iconColor: 'text-[#BE123C]' },
+    { href: '/avatar', title: 'Try-On', color: 'bg-[#FFE0D0]', icon: faPerson, iconColor: 'text-[#C2410C]' },
   ]
 
   return (
@@ -121,7 +119,7 @@ function AuthenticatedHome({ name }: { name: string }) {
         {quickActions.map(a => (
           <Link key={a.href} href={a.href}>
             <div className={`${a.color} rounded-2xl p-5 h-36 flex flex-col justify-between card-color`}>
-              <div className={a.textColor}>{a.icon}</div>
+              <FontAwesomeIcon icon={a.icon} className={`w-7 h-7 ${a.textColor}`} />
               <p className={`font-display text-lg font-bold leading-tight whitespace-pre-line ${a.textColor}`}>
                 {a.title}
               </p>
@@ -135,7 +133,7 @@ function AuthenticatedHome({ name }: { name: string }) {
         {features.map(f => (
           <Link key={f.href} href={f.href}>
             <div className={`${f.color} rounded-2xl p-4 text-center card-color aspect-square flex flex-col items-center justify-center gap-1.5`}>
-              <span className="text-2xl">{f.emoji}</span>
+              <FontAwesomeIcon icon={f.icon} className={`w-6 h-6 ${f.iconColor}`} />
               <p className="font-display text-xs font-bold text-[#0A0A0A]">{f.title}</p>
             </div>
           </Link>
@@ -146,7 +144,7 @@ function AuthenticatedHome({ name }: { name: string }) {
       <Link href="/demo" className="block mt-6">
         <div className="bg-[#F5F5F5] rounded-2xl p-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#0A0A0A] flex items-center justify-center flex-shrink-0">
-            <span className="text-lg">🧪</span>
+            <FontAwesomeIcon icon={faFlask} className="w-5 h-5 text-white" />
           </div>
           <div>
             <p className="font-display text-sm font-bold text-[#0A0A0A]">Load Demo Data</p>

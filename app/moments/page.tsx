@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/components/AuthContext'
 import { getMoments } from '@/lib/db'
 import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 interface Moment {
@@ -62,8 +64,8 @@ export default function MomentsPage() {
           <h1 className="font-serif text-2xl font-medium text-[#1a1a1a]">My Diary</h1>
           <p className="text-sm text-[#6b6157]">{moments.length} moments captured</p>
         </div>
-        <Link href="/capture" className="btn-primary !py-2 !px-4 !text-sm">
-          + Capture
+        <Link href="/capture" className="btn-primary !py-2 !px-4 !text-sm flex items-center gap-1.5">
+          <FontAwesomeIcon icon={faPlus} className="w-3 h-3" /> Capture
         </Link>
       </div>
 
@@ -74,10 +76,7 @@ export default function MomentsPage() {
       ) : moments.length === 0 ? (
         <div className="text-center py-20">
           <div className="bg-white rounded-2xl border border-[#e0d6ca] p-8">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#9c8e80" strokeWidth="1.5" className="mx-auto mb-4">
-              <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
-              <circle cx="12" cy="13" r="4" />
-            </svg>
+            <FontAwesomeIcon icon={faCamera} className="w-12 h-12 text-[#A3A3A3] mx-auto mb-4" />
             <h2 className="font-serif text-xl font-medium text-[#1a1a1a] mb-2">No moments yet</h2>
             <p className="text-sm text-[#6b6157] mb-6">Start capturing your daily outfits</p>
             <Link href="/capture" className="btn-primary">Capture First Moment</Link>
