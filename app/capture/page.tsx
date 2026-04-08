@@ -6,6 +6,7 @@ import { getOutfits, addMoment, addWearLog } from '@/lib/db'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera, faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons'
+import BackgroundRemoval from '@/components/BackgroundRemoval'
 
 const MOODS = [
   { emoji: '🔥', label: 'Fire' },
@@ -21,10 +22,11 @@ export default function CapturePage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [step, setStep] = useState<'photo' | 'details' | 'saving' | 'done'>('photo')
+  const [step, setStep] = useState<'photo' | 'bg-remove' | 'details' | 'saving' | 'done'>('photo')
   const [imageUrl, setImageUrl] = useState('')
   const [preview, setPreview] = useState('')
   const [uploading, setUploading] = useState(false)
+  const [originalBlob, setOriginalBlob] = useState<Blob | null>(null)
   const [mood, setMood] = useState('')
   const [occasion, setOccasion] = useState('')
   const [notes, setNotes] = useState('')
@@ -38,15 +40,29 @@ export default function CapturePage() {
     const file = e.target.files?.[0]
     if (!file) return
     setPreview(URL.createObjectURL(file))
+    setOriginalBlob(file)
+    setStep('bg-remove')
+  }
+
+  const uploadBlob = async (blob: Blob) => {
     setUploading(true)
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', new File([blob], 'photo.png', { type: 'image/png' }))
     try {
       const res = await fetchWithAuth('/api/upload', { method: 'POST', body: formData })
       const data = await res.json()
       if (data.url) { setImageUrl(data.url); setStep('details') }
     } catch (err) { console.error('Upload failed:', err) }
     setUploading(false)
+  }
+
+  const handleBgRemoveComplete = (processedBlob: Blob) => {
+    setPreview(URL.createObjectURL(processedBlob))
+    uploadBlob(processedBlob)
+  }
+
+  const handleBgRemoveSkip = () => {
+    if (originalBlob) uploadBlob(originalBlob)
   }
 
   const handleSave = async () => {
@@ -92,6 +108,16 @@ export default function CapturePage() {
           </div>
           <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileSelect} className="hidden" />
         </div>
+      )}
+
+      {/* Background removal step */}
+      {step === 'bg-remove' && originalBlob && (
+        <BackgroundRemoval
+          originalBlob={originalBlob}
+          originalPreview={preview}
+          onComplete={handleBgRemoveComplete}
+          onSkip={handleBgRemoveSkip}
+        />
       )}
 
       {/* Details step */}

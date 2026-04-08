@@ -1,8 +1,10 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/components/AuthContext'
-import { getItems } from '@/lib/db'
+import { getItems, getProfile } from '@/lib/db'
 import { useRouter } from 'next/navigation'
+import BodySilhouette from '@/components/BodySilhouette'
+import { type BodyShape } from '@/lib/bodyShape'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPerson, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -20,10 +22,18 @@ export default function AvatarPage() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [dragging, setDragging] = useState<string | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [userBodyShape, setUserBodyShape] = useState<BodyShape | null>(null)
   const boardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { if (!authLoading && !user) router.push('/auth/login') }, [authLoading, user, router])
-  useEffect(() => { if (user) getItems(user.uid).then(setItems).catch(() => {}) }, [user])
+  useEffect(() => {
+    if (user) {
+      getItems(user.uid).then(setItems).catch(() => {})
+      getProfile(user.uid).then((data: any) => {
+        if (data.bodyShape) setUserBodyShape(data.bodyShape)
+      }).catch(() => {})
+    }
+  }, [user])
 
   const filtered = activeCategory === 'all' ? items : items.filter(i => i.category === activeCategory)
   const addToAvatar = (item: any) => {
@@ -70,17 +80,7 @@ export default function AvatarPage() {
           <div className="bg-white rounded-2xl border border-[#E5E5E5] overflow-hidden">
             <div ref={boardRef} className="relative w-full" style={{ height: '500px' }}
               onMouseMove={handleMouseMove} onMouseUp={() => setDragging(null)} onMouseLeave={() => setDragging(null)}>
-              <svg viewBox="0 0 300 600" className="absolute inset-0 w-full h-full" style={{ opacity: 0.08 }}>
-                <ellipse cx="150" cy="60" rx="40" ry="50" fill="#0A0A0A" />
-                <rect x="135" y="105" width="30" height="30" fill="#0A0A0A" />
-                <path d="M90 135 Q75 150 70 200 L70 320 Q70 330 150 330 Q230 330 230 320 L230 200 Q225 150 210 135 L200 130 Q175 140 150 140 Q125 140 100 130 Z" fill="#0A0A0A" />
-                <path d="M90 140 Q60 160 50 220 Q45 250 55 260 Q65 270 70 250 Q70 220 90 200 Z" fill="#0A0A0A" />
-                <path d="M210 140 Q240 160 250 220 Q255 250 245 260 Q235 270 230 250 Q230 220 210 200 Z" fill="#0A0A0A" />
-                <path d="M100 320 Q90 380 88 440 Q86 500 95 530 Q105 540 120 530 Q125 500 125 440 L130 320 Z" fill="#0A0A0A" />
-                <path d="M200 320 Q210 380 212 440 Q214 500 205 530 Q195 540 180 530 Q175 500 175 440 L170 320 Z" fill="#0A0A0A" />
-                <ellipse cx="105" cy="545" rx="25" ry="12" fill="#0A0A0A" />
-                <ellipse cx="195" cy="545" rx="25" ry="12" fill="#0A0A0A" />
-              </svg>
+              <BodySilhouette bodyShape={userBodyShape} className="absolute inset-0 w-full h-full" />
 
               {layered.map(({ item, x, y, scale }) => (
                 <div key={item.id} className={`absolute cursor-grab active:cursor-grabbing select-none ${dragging === item.id ? 'z-50' : 'z-10'}`}
