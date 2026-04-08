@@ -1,15 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config) => {
-    config.experiments = {
-      ...config.experiments,
-      asyncWebAssembly: true,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.experiments = {
+        ...config.experiments,
+        asyncWebAssembly: true,
+      }
     }
-    // Fix for WASM module loading
-    config.module.rules.push({
-      test: /\.wasm$/,
-      type: 'asset/resource',
-    })
+    // Prevent @imgly/background-removal from being bundled server-side
+    if (isServer) {
+      config.externals = config.externals || []
+      config.externals.push('@imgly/background-removal')
+    }
     return config
   },
 }
