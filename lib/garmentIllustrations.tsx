@@ -2,15 +2,17 @@
 // Returns <img> tags pointing to the professional garment illustrations
 
 const ICON_MAP: [string[], string][] = [
-  // Skirts
-  [['a-line', 'flare skirt'], '001-skirt-20.svg'],
-  [['pencil skirt', 'bodycon skirt'], '003-skirt-18.svg'],
-  [['mini skirt', 'short skirt'], '005-skirt-16.svg'],
-  [['pleated', 'pleat'], '008-skirt-13.svg'],
-  [['midi skirt', 'midi'], '012-skirt-10.svg'],
-  [['circle skirt', 'full skirt'], '015-skirt-7.svg'],
-  [['wrap skirt'], '017-skirt-5.svg'],
-  [['skirt'], '198-skirt.svg'],
+  // Skirts — verified by path analysis
+  [['pencil skirt', 'bodycon skirt', 'straight skirt'], '015-skirt-7.svg'],  // very narrow, most pencil-like
+  [['a-line'], '005-skirt-16.svg'],              // moderate flare, wrap detail
+  [['flare skirt', 'flared'], '198-skirt.svg'],  // dramatic A-line, wide sweep
+  [['mini skirt', 'short skirt'], '007-skirt-14.svg'],  // short + ruffled hem
+  [['pleated', 'pleat'], '008-skirt-13.svg'],    // full circle, 4 panels
+  [['midi skirt', 'midi'], '012-skirt-10.svg'],  // A-line, V-waistband
+  [['circle skirt', 'full skirt'], '004-skirt-17.svg'],  // full circle maxi
+  [['wrap skirt', 'sarong'], '009-skirt-12.svg'], // wrap/sarong, diagonal
+  [['tiered', 'ruffle skirt', 'layered'], '018-skirt-4.svg'],  // 4 tiered layers
+  [['skirt'], '006-skirt-15.svg'],               // A-line with pockets (good default)
 
   // Dresses
   [['wrap dress', 'wrap'], '021-dress-49.svg'],
@@ -23,29 +25,32 @@ const ICON_MAP: [string[], string][] = [
   [['mini dress'], '170-dress-23.svg'],
   [['dress'], '197-dress.svg'],
 
-  // Pants / Trousers
-  [['wide-leg', 'palazzo', 'wide leg'], '035-trousers-7.svg'],
-  [['high-waist', 'high-rise', 'paperbag'], '036-trousers-6.svg'],
-  [['bootcut'], '038-trousers-4.svg'],
-  [['cargo'], '039-trousers-3.svg'],
-  [['slim', 'skinny', 'legging'], '040-trousers-2.svg'],
-  [['straight', 'trouser', 'tailored'], '042-trousers.svg'],
-  [['jogger', 'sweatpant'], '041-trousers-1.svg'],
-  [['culottes'], '037-trousers-5.svg'],
-  [['pant', 'jean', 'denim', 'bottom'], '031-pants.svg'],
+  // Pants / Trousers — verified by path analysis
+  [['wide-leg', 'palazzo', 'wide leg'], '037-trousers-5.svg'],    // legs flare outward, rounded hem
+  [['skinny', 'legging', 'slim-fit'], '035-trousers-7.svg'],      // narrow taper, button fly
+  [['high-waist', 'high-rise', 'paperbag'], '038-trousers-4.svg'],// high rise starts at top of canvas
+  [['bootcut'], '040-trousers-2.svg'],                             // tapers at knee then flares at hem
+  [['straight', 'trouser', 'tailored'], '036-trousers-6.svg'],    // parallel legs, belt loops
+  [['cargo'], '039-trousers-3.svg'],                               // straight with pocket detail
+  [['slim', 'fitted pant'], '041-trousers-1.svg'],                 // moderate taper, button closure
+  [['jogger', 'sweatpant'], '042-trousers.svg'],                   // basic plain straight
+  [['culottes'], '037-trousers-5.svg'],                             // wide-leg works for culottes too
+  [['pant', 'jean', 'denim', 'bottom'], '036-trousers-6.svg'],    // default: straight with belt loops
 
   // Shorts
   [['shorts', 'bermuda', 'short'], '032-shorts-1.svg'],
 
-  // Tops / Shirts
-  [['v-neck', 'v neck'], '145-shirt-3.svg'],
-  [['button-down', 'button down', 'oxford'], '147-shirt-1.svg'],
-  [['blouse', 'silk'], '146-shirt-2.svg'],
-  [['peplum'], '143-shirt-4.svg'],
-  [['crop', 'cropped'], '140-shirt-7.svg'],
-  [['polo'], '142-shirt-5.svg'],
-  [['fitted', 'tee', 'crew', 'basic'], '148-shirt.svg'],
-  [['shirt', 'top'], '148-shirt.svg'],
+  // Tops / Shirts — verified by path analysis
+  [['button-down', 'button down', 'oxford', 'dress shirt'], '143-shirt-4.svg'],  // collared, 3 buttons, striped panels
+  [['v-neck', 'v neck'], '145-shirt-3.svg'],         // collared dress shirt, plain body
+  [['blouse', 'silk'], '146-shirt-2.svg'],            // polo-style with shoulder detail
+  [['polo'], '146-shirt-2.svg'],                       // polo with epaulets
+  [['bow', 'ribbon'], '141-shirt-6.svg'],              // long-sleeve with ribbon bow
+  [['tie', 'necktie', 'formal shirt'], '139-shirt-8.svg'],  // button-front with necktie
+  [['crop', 'cropped'], '140-shirt-7.svg'],            // long-sleeve with bow-tie/buckle
+  [['pocket'], '132-shirt-14.svg'],                    // long-sleeve with chest pocket
+  [['fitted', 'tee', 'crew', 'basic', 't-shirt'], '142-shirt-5.svg'],  // plain t-shirt, no embellishments
+  [['shirt', 'top'], '148-shirt.svg'],                 // basic plain collared (good default)
 
   // Sleeveless / Tank
   [['tank', 'cami', 'camisole', 'spaghetti'], '078-tank-top-2.svg'],
