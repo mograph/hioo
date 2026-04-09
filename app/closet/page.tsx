@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/components/AuthContext'
 import { getItems } from '@/lib/db'
 import { useRouter } from 'next/navigation'
+import { getCategoryIcon } from '@/lib/garmentIllustrations'
 import ClothingItemCard from '@/components/ClothingItemCard'
 
 const CATEGORIES = ['all', 'tops', 'bottoms', 'shoes', 'accessories', 'outerwear']
@@ -68,14 +69,13 @@ export default function ClosetPage() {
         <div className="grid grid-cols-2 gap-3">
           {filtered.map((item: any) => (
             <div key={item.id} className="bg-white rounded-2xl border border-[#E5E5E5] overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-square bg-[#F5F5F5] flex items-center justify-center">
+              <div className="aspect-square bg-[#F5F5F5] flex items-center justify-center p-4">
                 {item.imageUrl ? (
-                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover rounded-xl" />
                 ) : (
-                  <span className="text-3xl">
-                    {item.category === 'tops' ? '👕' : item.category === 'bottoms' ? '👖' :
-                     item.category === 'shoes' ? '👟' : item.category === 'accessories' ? '👜' : '🧥'}
-                  </span>
+                  <div className="opacity-30">
+                    {getCategoryIcon(item.category, 64)}
+                  </div>
                 )}
               </div>
               <div className="p-3">

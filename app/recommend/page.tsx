@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useAuth } from '@/components/AuthContext'
 import { getItems, getRecommendations, getProfile, updateProfile } from '@/lib/db'
 import { classifyBodyShape, parseMeasurement, getShapeInfo, getStyleTips, scoreItemForBody, type BodyShape, type AccentuationGoal } from '@/lib/bodyShape'
-import { getGarmentSVG } from '@/lib/garmentIllustrations'
+import { getPairingIcons } from '@/lib/garmentIllustrations'
 import BodySilhouette from '@/components/BodySilhouette'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -164,20 +164,18 @@ export default function RecommendPage() {
         </div>
       )}
 
-      {/* Style Tips with illustrations */}
+      {/* Style Tips with garment pairing illustrations */}
       {tips.length > 0 && (
         <div className="bg-white rounded-2xl border border-[#E5E5E5] p-4 mb-4">
-          <p className="font-display text-sm mb-3">Recommended for you</p>
+          <p className="font-display text-sm mb-3">Pair these together</p>
           <div className="grid grid-cols-2 gap-2">
             {tips.slice(0, 6).map((tip, i) => (
-              <div key={i} className="bg-[#F5F5F5] rounded-xl p-3 flex gap-2.5">
-                <div className="flex-shrink-0 opacity-60">
-                  {getGarmentSVG(tip.title, 32)}
+              <div key={i} className="bg-[#F5F5F5] rounded-xl p-3">
+                <div className="flex justify-center mb-2">
+                  {getPairingIcons(tip, 36)}
                 </div>
-                <div className="min-w-0">
-                  <p className="font-display text-xs leading-tight">{tip.title}</p>
-                  <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5">{tip.description}</p>
-                </div>
+                <p className="font-display text-xs leading-tight text-center">{tip.title}</p>
+                <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5 text-center">{tip.description}</p>
               </div>
             ))}
           </div>
