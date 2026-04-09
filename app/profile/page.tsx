@@ -6,6 +6,7 @@ import { classifyBodyShape, parseMeasurement, getShapeInfo, getStyleTips, type B
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faRuler, faHeart, faLightbulb } from '@fortawesome/free-solid-svg-icons'
+import BodySilhouette from '@/components/BodySilhouette'
 
 const GOALS: { key: AccentuationGoal; label: string }[] = [
   { key: 'waist', label: 'Waist' },
@@ -110,16 +111,25 @@ export default function ProfilePage() {
         </div>
 
         {/* Body Shape Result */}
-        {shapeInfo && (
+        {shapeInfo && bodyShape && (
           <div className={`${shapeInfo.bgColor} rounded-2xl p-5`}>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl">{shapeInfo.emoji}</span>
-              <div>
-                <p className={`font-display text-xl ${shapeInfo.color}`}>{shapeInfo.name}</p>
-                <p className="text-[10px] font-display uppercase text-[#525252]">Your Body Shape</p>
+            <div className="flex gap-4">
+              {/* Silhouette */}
+              <div className="w-24 flex-shrink-0">
+                <BodySilhouette bodyShape={bodyShape} opacity={0.15} className="w-full" />
+              </div>
+              {/* Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">{shapeInfo.emoji}</span>
+                  <div>
+                    <p className={`font-display text-xl ${shapeInfo.color}`}>{shapeInfo.name}</p>
+                    <p className="text-[10px] font-display uppercase text-[#525252]">Your Body Shape</p>
+                  </div>
+                </div>
+                <p className="text-xs text-[#525252] leading-relaxed">{shapeInfo.description}</p>
               </div>
             </div>
-            <p className="text-sm text-[#525252] leading-relaxed">{shapeInfo.description}</p>
           </div>
         )}
 
