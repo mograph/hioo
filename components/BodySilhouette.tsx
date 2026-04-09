@@ -15,7 +15,7 @@ const SHAPE_FILES: Record<BodyShape, string> = {
   'inverted-triangle': '/body-shapes/inverted-triangle.svg',
 }
 
-export default function BodySilhouette({ bodyShape, opacity = 0.15, className = '' }: Props) {
+export default function BodySilhouette({ bodyShape, opacity = 0.85, className = '' }: Props) {
   const file = bodyShape ? SHAPE_FILES[bodyShape] : '/body-shapes/rectangle.svg'
 
   return (

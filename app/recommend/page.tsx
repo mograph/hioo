@@ -97,6 +97,7 @@ export default function RecommendPage() {
 
   const measureFields = [
     { key: 'bust', label: 'Bust' }, { key: 'waist', label: 'Waist' }, { key: 'hips', label: 'Hips' },
+    { key: 'shoulders', label: 'Shoulders' }, { key: 'height', label: 'Height' }, { key: 'inseam', label: 'Inseam' },
   ]
 
   return (
@@ -109,7 +110,7 @@ export default function RecommendPage() {
         <div className={`${shapeInfo.bgColor} rounded-2xl p-5 mb-4`}>
           <div className="flex gap-4">
             <div className="w-16 flex-shrink-0">
-              <BodySilhouette bodyShape={bodyShape} opacity={0.18} className="w-full" />
+              <BodySilhouette bodyShape={bodyShape} opacity={0.9} className="w-full" />
             </div>
             <div className="flex-1">
               <p className={`font-display text-lg ${shapeInfo.color}`}>{shapeInfo.name}</p>

@@ -39,10 +39,37 @@ export default function ProfilePage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  const measureFields = [
-    { key: 'height', label: 'Height' }, { key: 'bust', label: 'Bust/Chest' },
-    { key: 'waist', label: 'Waist' }, { key: 'hips', label: 'Hips' },
-    { key: 'inseam', label: 'Inseam' }, { key: 'shoeSize', label: 'Shoe Size' },
+  const measureSections = [
+    { title: 'Core', fields: [
+      { key: 'height', label: 'Height' },
+      { key: 'weight', label: 'Weight' },
+      { key: 'bust', label: 'Bust/Chest' },
+      { key: 'underbust', label: 'Underbust' },
+      { key: 'waist', label: 'Waist' },
+      { key: 'hips', label: 'Hips' },
+    ]},
+    { title: 'Upper Body', fields: [
+      { key: 'shoulders', label: 'Shoulders' },
+      { key: 'armLength', label: 'Arm Length' },
+      { key: 'bicep', label: 'Bicep' },
+      { key: 'wrist', label: 'Wrist' },
+      { key: 'neck', label: 'Neck' },
+      { key: 'torsoLength', label: 'Torso Length' },
+    ]},
+    { title: 'Lower Body', fields: [
+      { key: 'inseam', label: 'Inseam' },
+      { key: 'outseam', label: 'Outseam' },
+      { key: 'thigh', label: 'Thigh' },
+      { key: 'knee', label: 'Knee' },
+      { key: 'calf', label: 'Calf' },
+      { key: 'ankle', label: 'Ankle' },
+    ]},
+    { title: 'Feet & Hands', fields: [
+      { key: 'shoeSize', label: 'Shoe Size' },
+      { key: 'footWidth', label: 'Foot Width' },
+      { key: 'ringSize', label: 'Ring Size' },
+      { key: 'braceletSize', label: 'Bracelet' },
+    ]},
   ]
 
   if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="w-8 h-8 border-2 border-[#E5E5E5] border-t-[#0A0A0A] rounded-full animate-spin" /></div>
@@ -67,22 +94,24 @@ export default function ProfilePage() {
             className="w-full px-4 py-3 rounded-xl border-2 border-[#E5E5E5] text-sm font-medium focus:outline-none focus:border-[#0A0A0A]" />
         </div>
 
-        {/* Measurements */}
-        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <FontAwesomeIcon icon={faRuler} className="w-4 h-4 text-[#A3A3A3]" />
-            <h2 className="font-display text-lg">Measurements</h2>
+        {/* Measurements — organized by body section */}
+        {measureSections.map(section => (
+          <div key={section.title} className="bg-white rounded-2xl border border-[#E5E5E5] p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <FontAwesomeIcon icon={faRuler} className="w-4 h-4 text-[#A3A3A3]" />
+              <h2 className="font-display text-lg">{section.title}</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {section.fields.map(({ key, label }) => (
+                <div key={key}>
+                  <label className="text-[10px] font-display uppercase text-[#A3A3A3] block mb-1">{label}</label>
+                  <input type="text" value={measurements[key] || ''} onChange={e => setMeasurements({ ...measurements, [key]: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E5E5E5] text-sm focus:outline-none focus:border-[#0A0A0A]" />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            {measureFields.map(({ key, label }) => (
-              <div key={key}>
-                <label className="text-[10px] font-display uppercase text-[#A3A3A3] block mb-1">{label}</label>
-                <input type="text" value={measurements[key] || ''} onChange={e => setMeasurements({ ...measurements, [key]: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-[#E5E5E5] text-sm focus:outline-none focus:border-[#0A0A0A]" />
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
 
         {/* Link to Suggest for body shape results */}
         <Link href="/recommend" className="block bg-[#FFE0D0] rounded-2xl p-4">
