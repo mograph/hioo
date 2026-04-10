@@ -129,24 +129,55 @@ export function getCategoryIcon(category: string, size = 40): JSX.Element {
   return <img src={`/garments/${file}`} alt={category} width={size} height={size} className="object-contain" />
 }
 
-// Get a pairing suggestion — returns two icons that go together
-export function getPairingIcons(tip: { title: string; categories: string[] }, size = 32): JSX.Element {
-  const topIcon = getGarmentSVG(tip.title, size)
+// Smart pairing — figure out what the tip item IS, then pair with something complementary
+function detectItemType(title: string): 'top' | 'bottom' | 'outerwear' | 'accessory' | 'shoe' | 'dress' {
+  const t = title.toLowerCase()
+  // Check dresses first (before skirts/tops)
+  if (t.includes('dress')) return 'dress'
+  // Bottoms
+  if (t.includes('skirt') || t.includes('pant') || t.includes('trouser') || t.includes('jean') ||
+      t.includes('short') || t.includes('wide-leg') || t.includes('bootcut') || t.includes('flare') ||
+      t.includes('palazzo') || t.includes('culotte') || t.includes('legging') || t.includes('high-waist') ||
+      t.includes('slim') || t.includes('skinny') || t.includes('pencil') || t.includes('a-line') ||
+      t.includes('pleated') || t.includes('midi') || t.includes('mini skirt') || t.includes('cargo')) return 'bottom'
+  // Outerwear
+  if (t.includes('coat') || t.includes('jacket') || t.includes('blazer') || t.includes('cardigan') ||
+      t.includes('layer') || t.includes('vest') || t.includes('puffer') || t.includes('trench') ||
+      t.includes('bomber') || t.includes('duster') || t.includes('cape') || t.includes('poncho')) return 'outerwear'
+  // Accessories
+  if (t.includes('belt') || t.includes('scarf') || t.includes('necklace') || t.includes('earring') ||
+      t.includes('bag') || t.includes('hat') || t.includes('sunglasses') || t.includes('watch') ||
+      t.includes('bracelet') || t.includes('ring') || t.includes('clutch')) return 'accessory'
+  // Shoes
+  if (t.includes('heel') || t.includes('boot') || t.includes('sneaker') || t.includes('sandal') ||
+      t.includes('flat') || t.includes('loafer') || t.includes('mule') || t.includes('platform') ||
+      t.includes('shoe') || t.includes('espadrille') || t.includes('wedge')) return 'shoe'
+  // Default to top
+  return 'top'
+}
 
-  // Find a complementary item based on categories
-  let pairFile = ''
-  if (tip.categories.includes('tops')) pairFile = '001-skirt-20.svg' // pair top with skirt
-  else if (tip.categories.includes('bottoms')) pairFile = '148-shirt.svg' // pair bottom with top
-  else if (tip.categories.includes('outerwear')) pairFile = '042-trousers.svg' // pair coat with pants
-  else if (tip.categories.includes('accessories')) pairFile = '197-dress.svg' // pair accessory with dress
+// Complementary pairings that make fashion sense
+const PAIR_MAP: Record<string, string> = {
+  top: '036-trousers-6.svg',       // top → straight trousers
+  bottom: '142-shirt-5.svg',       // bottom → plain tee
+  outerwear: '036-trousers-6.svg', // outerwear → trousers
+  accessory: '197-dress.svg',      // accessory → dress
+  shoe: '036-trousers-6.svg',      // shoe → trousers
+  dress: '131-coat.svg',           // dress → coat/blazer
+}
+
+export function getPairingIcons(tip: { title: string; categories: string[] }, size = 32): JSX.Element {
+  const itemType = detectItemType(tip.title)
+  const mainIcon = getGarmentSVG(tip.title, size)
+  const pairFile = PAIR_MAP[itemType]
 
   return (
     <div className="flex items-center gap-1">
-      {topIcon}
+      {mainIcon}
       {pairFile && (
         <>
           <span className="text-[#D4D4D4] text-xs">+</span>
-          <img src={`/garments/${pairFile}`} alt="pair" width={size} height={size} className="object-contain opacity-50" />
+          <img src={`/garments/${pairFile}`} alt="pair with" width={size} height={size} className="object-contain opacity-50" />
         </>
       )}
     </div>
