@@ -2,6 +2,8 @@
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { fetchWithAuth } from '@/lib/api'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 interface ImageUploadProps {
   value?: string
@@ -45,36 +47,35 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
   return (
     <div className="space-y-2">
       {preview ? (
-        <div className="relative">
-          <div className="polaroid inline-block">
-            <img src={preview} alt="Preview" className="w-48 h-48 object-cover" />
-          </div>
+        <div className="relative inline-block">
+          <img src={preview} alt="Preview" className="w-48 h-48 object-cover rounded-2xl" />
           <button
             type="button"
             onClick={() => { setPreview(''); onChange('') }}
-            className="absolute top-0 right-0 bg-[#cc2200] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md"
+            className="absolute -top-2 -right-2 bg-[#0A0A0A] text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md"
           >
-            ×
+            <FontAwesomeIcon icon={faXmark} className="w-3 h-3" />
           </button>
         </div>
       ) : (
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
-            isDragActive ? 'border-[#cc2200] bg-[#cc2200]/10' : 'border-[#c8a06a]/60 hover:border-[#c8a06a] bg-[#faf5e4]/20'
+          className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-colors ${
+            isDragActive ? 'border-[#0A0A0A] bg-[#F5F5F5]' : 'border-[#E5E5E5] hover:border-[#0A0A0A] bg-white'
           }`}
         >
           <input {...getInputProps()} />
-          <div className="text-4xl mb-2">📸</div>
-          <p className="font-handwritten text-[#faf5e4] text-lg">
-            {isDragActive ? 'Drop it here!' : 'Drag & drop or click to upload'}
+          <FontAwesomeIcon icon={faCamera} className="w-10 h-10 text-[#D4D4D4] mb-3" />
+          <p className="font-display text-sm text-[#525252]">
+            {isDragActive ? 'Drop it here!' : 'Tap to upload'}
           </p>
-          <p className="text-[#faf5e4]/60 text-xs mt-1">JPG, PNG, WebP up to 10MB</p>
+          <p className="text-[#A3A3A3] text-xs mt-1">JPG, PNG, WebP up to 10MB</p>
         </div>
       )}
       {uploading && (
         <div className="text-center">
-          <span className="font-handwritten text-[#faf5e4]/70 animate-pulse">Uploading...</span>
+          <div className="w-6 h-6 border-2 border-[#E5E5E5] border-t-[#0A0A0A] rounded-full animate-spin mx-auto mb-1" />
+          <span className="font-display text-xs text-[#A3A3A3]">Uploading...</span>
         </div>
       )}
     </div>

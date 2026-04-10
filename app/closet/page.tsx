@@ -4,7 +4,6 @@ import { useAuth } from '@/components/AuthContext'
 import { getItems } from '@/lib/db'
 import { useRouter } from 'next/navigation'
 import { getCategoryIcon } from '@/lib/garmentIllustrations'
-import ClothingItemCard from '@/components/ClothingItemCard'
 
 const CATEGORIES = ['all', 'tops', 'bottoms', 'shoes', 'accessories', 'outerwear']
 
