@@ -166,3 +166,21 @@ export function getRecommendations(items: any[], occasion?: string, temperature?
   }
   return outfit
 }
+
+// Group items by category, filtered by occasion/temperature — for Alta-style carousels
+export const OUTFIT_CATEGORIES = ['tops', 'bottoms', 'shoes', 'outerwear', 'accessories'] as const
+
+export function getOutfitByCategory(items: any[], occasion?: string, temperature?: number): Record<string, any[]> {
+  let filtered = [...items]
+  if (occasion) filtered = filtered.filter(i => i.occasions?.includes(occasion))
+  if (temperature !== undefined) {
+    const season = temperature < 10 ? 'winter' : temperature < 20 ? 'fall' : temperature < 28 ? 'spring' : 'summer'
+    filtered = filtered.filter(i => i.seasons?.includes(season))
+  }
+  const byCategory: Record<string, any[]> = {}
+  for (const cat of OUTFIT_CATEGORIES) byCategory[cat] = []
+  filtered.forEach(i => {
+    if (byCategory[i.category]) byCategory[i.category].push(i)
+  })
+  return byCategory
+}

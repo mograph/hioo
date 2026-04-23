@@ -174,3 +174,7 @@ body {
 
 /* Magazine border compat */
 .magazine-border { border: 2px solid var(--border); border-radius: 16px; }
+
+/* Hide scrollbar on horizontal carousels */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
