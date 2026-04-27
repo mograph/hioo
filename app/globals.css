@@ -271,3 +271,59 @@ body {
   transform: skew(-6deg);
 }
 .tag-slant > span { display: inline-block; transform: skew(6deg); }
+
+/* ─── Y2K / EARLY 2000s SCRAPBOOK UTILITIES ─── */
+
+/* Manila folder — kraft paper tone */
+.kraft { background: #E8D8B7; }
+.kraft-dark { background: #C9B58E; }
+.kraft-cream { background: #F4E9D2; }
+
+/* Index card — slightly off-white with horizontal lines */
+.index-card {
+  background: #FFFEF7;
+  background-image:
+    linear-gradient(transparent 23px, #FFB3BA 23px, #FFB3BA 24px, transparent 24px),
+    repeating-linear-gradient(transparent 0, transparent 27px, #B5D8FA 27px, #B5D8FA 28px, transparent 28px, transparent 56px);
+  background-size: 100% 56px, 100% 28px;
+  background-position: 0 0;
+}
+
+/* Notebook paper — dot grid */
+.dot-grid {
+  background-color: #FFFEF7;
+  background-image: radial-gradient(#0A0A0A22 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Holographic shimmer — Y2K iridescent */
+.holo {
+  background: linear-gradient(135deg,
+    #FFD1F1 0%, #B8F044 25%, #7DD3FC 50%, #C4B5FD 75%, #FFD1F1 100%);
+  background-size: 200% 200%;
+  animation: holo-shift 6s ease infinite;
+}
+@keyframes holo-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Dashed/dotted borders — cut-out look */
+.cut-out { border: 2px dashed #0A0A0A; }
+.cut-out-light { border: 2px dashed #C9B58E; }
+
+/* Sticker peel — looks like a sticker about to come off */
+.sticker-peel {
+  position: relative;
+  filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.15));
+}
+.sticker-peel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
+  border-bottom-right-radius: inherit;
+}
