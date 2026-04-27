@@ -208,10 +208,6 @@ body {
 .tilt-l-2 { transform: rotate(-3deg); }
 .tilt-r-1 { transform: rotate(1.5deg); }
 .tilt-r-2 { transform: rotate(3deg); }
-.tilt-l-1:hover, .tilt-l-2:hover, .tilt-r-1:hover, .tilt-r-2:hover {
-  transform: rotate(0deg) scale(1.02);
-  transition: transform 0.3s ease;
-}
 
 /* Sticker — adds a slight shadow + rotation for tag/badge feels */
 .sticker {
