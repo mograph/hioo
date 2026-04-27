@@ -1,69 +1,56 @@
-// Lightweight background removal using Canvas API
-// Removes white/light backgrounds by converting them to transparent
+// Background removal — calls our /api/remove-bg route which uses BiRefNet via fal.ai
+// MIT-licensed model, ~$0.003 per image, far better edges than the old Canvas hack
 
+import { fetchWithAuth } from './api'
+
+/**
+ * Removes background from an image. Two paths:
+ *  1. If you have a public URL for the image already, pass it as `imageUrl`.
+ *  2. If you have a Blob (e.g. just-captured photo), we upload it first then process.
+ *
+ * Returns a public URL to the bg-removed PNG (transparent background).
+ */
+export async function removeBackgroundFromUrl(
+  imageUrl: string,
+  onProgress?: (pct: number) => void
+): Promise<string> {
+  onProgress?.(20)
+  const res = await fetchWithAuth('/api/remove-bg', {
+    method: 'POST',
+    body: JSON.stringify({ imageUrl }),
+  })
+  onProgress?.(80)
+  const data = await res.json()
+  if (data.error) throw new Error(data.error)
+  onProgress?.(100)
+  return data.resultUrl
+}
+
+/**
+ * Convenience: take a Blob, upload to /api/upload, then remove background.
+ * Returns the bg-removed image URL.
+ */
 export async function removeImageBackground(
   imageBlob: Blob,
   onProgress?: (pct: number) => void
 ): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      try {
-        onProgress?.(20)
-        const canvas = document.createElement('canvas')
-        canvas.width = img.width
-        canvas.height = img.height
-        const ctx = canvas.getContext('2d')!
-        ctx.drawImage(img, 0, 0)
+  // Step 1: upload the original to get a public URL
+  onProgress?.(10)
+  const formData = new FormData()
+  formData.append('file', new File([imageBlob], 'photo.png', { type: imageBlob.type || 'image/png' }))
+  const uploadRes = await fetchWithAuth('/api/upload', { method: 'POST', body: formData })
+  const uploadData = await uploadRes.json()
+  if (!uploadData.url) throw new Error('Upload failed')
+  const absoluteUrl = uploadData.url.startsWith('http') ? uploadData.url : `${window.location.origin}${uploadData.url}`
 
-        onProgress?.(40)
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-        const data = imageData.data
+  // Step 2: send to bg-removal API
+  onProgress?.(40)
+  const resultUrl = await removeBackgroundFromUrl(absoluteUrl)
 
-        // Sample corners to detect background color
-        const corners = [
-          [0, 0], [canvas.width - 1, 0],
-          [0, canvas.height - 1], [canvas.width - 1, canvas.height - 1],
-        ]
-        let bgR = 0, bgG = 0, bgB = 0
-        for (const [x, y] of corners) {
-          const i = (y * canvas.width + x) * 4
-          bgR += data[i]; bgG += data[i + 1]; bgB += data[i + 2]
-        }
-        bgR = Math.round(bgR / 4)
-        bgG = Math.round(bgG / 4)
-        bgB = Math.round(bgB / 4)
-
-        onProgress?.(60)
-
-        // Remove pixels similar to the background color
-        const threshold = 45 // color distance threshold
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i], g = data[i + 1], b = data[i + 2]
-          const dist = Math.sqrt(
-            (r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2
-          )
-          if (dist < threshold) {
-            data[i + 3] = 0 // make transparent
-          } else if (dist < threshold * 1.5) {
-            // Soft edge — partial transparency
-            data[i + 3] = Math.round(((dist - threshold) / (threshold * 0.5)) * 255)
-          }
-        }
-
-        onProgress?.(80)
-        ctx.putImageData(imageData, 0, 0)
-
-        onProgress?.(100)
-        canvas.toBlob(blob => {
-          if (blob) resolve(blob)
-          else reject(new Error('Failed to create blob'))
-        }, 'image/png')
-      } catch (err) {
-        reject(err)
-      }
-    }
-    img.onerror = () => reject(new Error('Failed to load image'))
-    img.src = URL.createObjectURL(imageBlob)
-  })
+  // Step 3: download the processed image as a Blob
+  onProgress?.(85)
+  const blobRes = await fetch(resultUrl)
+  const blob = await blobRes.blob()
+  onProgress?.(100)
+  return blob
 }

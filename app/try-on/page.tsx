@@ -5,7 +5,8 @@ import { getItems, getProfile, updateProfile } from '@/lib/db'
 import { fetchWithAuth } from '@/lib/api'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCamera, faArrowLeft, faRotate, faLock, faLockOpen, faShuffle, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
+import { faCamera, faArrowLeft, faRotate, faLock, faLockOpen, faShuffle, faWandMagicSparkles, faScissors } from '@fortawesome/free-solid-svg-icons'
+import { removeBackgroundFromUrl } from '@/lib/backgroundRemoval'
 
 const TRYON_CATEGORIES = ['tops', 'bottoms', 'outerwear'] as const
 type Cat = typeof TRYON_CATEGORIES[number]
@@ -33,6 +34,7 @@ function TryOnInner() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [bodyPhotoUrl, setBodyPhotoUrl] = useState('')
   const [bodyPhotoLoading, setBodyPhotoLoading] = useState(false)
+  const [strippingBg, setStrippingBg] = useState(false)
   const [items, setItems] = useState<any[]>([])
 
   // Per-category selected index + lock + cached render URL
@@ -155,6 +157,21 @@ function TryOnInner() {
   const previewUrl = activeRenderKey && renderedUrl[activeRenderKey]
   const isRenderingActive = renderingFor === activeRenderKey
 
+  const handleStripBackground = async () => {
+    if (!user || !bodyPhotoUrl || strippingBg) return
+    setStrippingBg(true)
+    setError('')
+    try {
+      const cleanedUrl = await removeBackgroundFromUrl(bodyPhotoUrl)
+      setBodyPhotoUrl(cleanedUrl)
+      await updateProfile(user.uid, { bodyPhotoUrl: cleanedUrl })
+      setRenderedUrl({}) // invalidate previous renders
+    } catch (err: any) {
+      setError(err.message || 'Background removal failed')
+    }
+    setStrippingBg(false)
+  }
+
   return (
     <div className="max-w-lg mx-auto px-5 py-6 pb-nav">
       <div className="flex items-center gap-3 mb-4">
@@ -166,10 +183,17 @@ function TryOnInner() {
           <p className="text-[#A3A3A3] text-xs">Slide to swap clothes on you</p>
         </div>
         {bodyPhotoUrl && (
-          <button onClick={() => fileInputRef.current?.click()}
-            className="text-[10px] font-display bg-[#F5F5F5] text-[#525252] px-3 py-1.5 rounded-full">
-            <FontAwesomeIcon icon={faRotate} className="w-2.5 h-2.5 mr-1" />Replace photo
-          </button>
+          <div className="flex gap-1.5">
+            <button onClick={handleStripBackground} disabled={strippingBg}
+              className="text-[10px] font-display bg-[#EDE9FE] text-[#6D28D9] px-3 py-1.5 rounded-full disabled:opacity-50">
+              <FontAwesomeIcon icon={faScissors} className="w-2.5 h-2.5 mr-1" />
+              {strippingBg ? 'Cleaning...' : 'Clean bg'}
+            </button>
+            <button onClick={() => fileInputRef.current?.click()}
+              className="text-[10px] font-display bg-[#F5F5F5] text-[#525252] px-3 py-1.5 rounded-full">
+              <FontAwesomeIcon icon={faRotate} className="w-2.5 h-2.5 mr-1" />Replace
+            </button>
+          </div>
         )}
       </div>
 

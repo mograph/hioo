@@ -149,21 +149,13 @@ export default function RecommendPage() {
       {/* Body Shape Section */}
       {bodyShape && shapeInfo ? (
         <div className={`${shapeInfo.bgColor} rounded-2xl p-5 mb-4`}>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <div className="w-16 flex-shrink-0">
               <BodySilhouette bodyShape={bodyShape} opacity={0.9} className="w-full" />
             </div>
             <div className="flex-1">
-              <p className={`font-display text-lg ${shapeInfo.color}`}>{shapeInfo.name}</p>
-              <p className="text-[10px] font-display uppercase text-[#525252] mb-2">Your Shape</p>
-              <div className="flex flex-wrap gap-1.5">
-                {GOALS.map(({ key, label }) => (
-                  <button key={key} onClick={() => { toggleGoal(key); setTimeout(saveMeasurements, 100) }}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-display transition-all ${
-                      styleGoals.includes(key) ? 'bg-[#0A0A0A] text-white' : 'bg-white/60 text-[#525252]'
-                    }`}>{label}</button>
-                ))}
-              </div>
+              <p className={`font-display text-xl ${shapeInfo.color}`}>{shapeInfo.name}</p>
+              <p className="text-[10px] font-display uppercase text-[#525252] mt-0.5">Your Shape</p>
             </div>
           </div>
           <button onClick={() => setShowMeasurements(!showMeasurements)}
@@ -202,21 +194,50 @@ export default function RecommendPage() {
         </div>
       )}
 
-      {/* Style Tips for your shape */}
-      {tips.length > 0 && !hasGenerated && (
-        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-4 mb-4">
-          <p className="font-display text-sm mb-3">Recommended for your shape</p>
-          <div className="grid grid-cols-2 gap-2">
-            {tips.slice(0, 4).map((tip, i) => (
-              <div key={i} className="bg-[#F5F5F5] rounded-xl p-3">
-                <div className="flex justify-center mb-2 h-10 items-center">
-                  {getPairingIcons(tip, 40)}
-                </div>
-                <p className="font-display text-xs leading-tight text-center">{tip.title}</p>
-                <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5 text-center">{tip.description}</p>
-              </div>
+      {/* Emphasize prompt — only show if we have a body shape */}
+      {bodyShape && (
+        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-5 mb-4">
+          <p className="font-display text-base text-[#0A0A0A]">What do you want to emphasize?</p>
+          <p className="text-[11px] text-[#A3A3A3] mt-0.5 mb-3">Pick areas to highlight — we'll match pieces that flatter them</p>
+          <div className="flex flex-wrap gap-2">
+            {GOALS.map(({ key, label }) => (
+              <button key={key} onClick={() => { toggleGoal(key); setTimeout(saveMeasurements, 100) }}
+                className={`px-4 py-2 rounded-full text-sm font-display transition-all ${
+                  styleGoals.includes(key) ? 'bg-[#0A0A0A] text-white' : 'bg-[#F5F5F5] text-[#525252] hover:bg-[#E5E5E5]'
+                }`}>{label}</button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Style Tips — visible always when we have a body shape */}
+      {bodyShape && shapeInfo && (
+        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-4 mb-4">
+          <div className="mb-3">
+            <p className="font-display text-sm text-[#0A0A0A]">
+              Recommended for {shapeInfo.name}{styleGoals.length > 0 && (
+                <> + <span className={shapeInfo.color}>{styleGoals.map(g => g.charAt(0).toUpperCase() + g.slice(1)).join(', ')}</span></>
+              )}
+            </p>
+            {styleGoals.length === 0 && (
+              <p className="text-[11px] text-[#A3A3A3] mt-0.5">Pick what you want to highlight above to see specific picks</p>
+            )}
+          </div>
+          {tips.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2">
+              {tips.slice(0, styleGoals.length > 0 ? 6 : 4).map((tip, i) => (
+                <div key={i} className="bg-[#F5F5F5] rounded-xl p-3">
+                  <div className="flex justify-center mb-2 h-12 items-center">
+                    {getPairingIcons(tip, 48)}
+                  </div>
+                  <p className="font-display text-xs leading-tight text-center">{tip.title}</p>
+                  <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5 text-center">{tip.description}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-[11px] text-[#A3A3A3] text-center py-4">No tips yet — pick an emphasis goal above</div>
+          )}
         </div>
       )}
 

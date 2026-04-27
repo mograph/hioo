@@ -142,7 +142,10 @@ export function getCategoryIcon(category: string, size = 40): JSX.Element {
   return <img src={`/garments/${file}`} alt={category} width={size} height={size} className="object-contain" />
 }
 
-// Single icon for a style tip (replaces the misleading "+ pair" layout)
-export function getPairingIcons(tip: { title: string; categories: string[] }, size = 36): JSX.Element {
+// Single icon for a style tip — prefer explicit iconFile, fall back to keyword matching
+export function getPairingIcons(tip: { title: string; categories: string[]; iconFile?: string }, size = 36): JSX.Element {
+  if (tip.iconFile) {
+    return <img src={`/garments/${tip.iconFile}`} alt={tip.title} width={size} height={size} className="object-contain" />
+  }
   return getGarmentSVG(tip.title, size)
 }
