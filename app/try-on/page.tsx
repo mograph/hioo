@@ -47,10 +47,10 @@ function TryOnInner() {
 
   useEffect(() => {
     if (!user) return
-    getItems(user.uid).then(data => {
+    getItems(user.uid).then((data: any[]) => {
       setItems(data)
       if (initialItemId) {
-        const item = data.find((i: any) => i.id === initialItemId)
+        const item: any = data.find((i: any) => i.id === initialItemId)
         if (item && TRYON_CATEGORIES.includes(item.category as Cat)) {
           setActivePreviewCat(item.category as Cat)
           const catItems = data.filter((i: any) => i.category === item.category && i.imageUrl)
