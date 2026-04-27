@@ -6,6 +6,7 @@ import { classifyBodyShape, parseMeasurement, getShapeInfo, getStyleTips, scoreI
 import { getPairingIcons } from '@/lib/garmentIllustrations'
 import BodySilhouette from '@/components/BodySilhouette'
 import CategoryCarousel from '@/components/CategoryCarousel'
+import { Blob, Sticker, WaveDivider, Squiggle } from '@/components/Decorative'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWandMagicSparkles, faShuffle, faTemperatureHalf, faPerson, faRuler, faChevronDown, faChevronUp, faBookmark, faCheck } from '@fortawesome/free-solid-svg-icons'
@@ -142,20 +143,29 @@ export default function RecommendPage() {
   const selectedCount = OUTFIT_CATEGORIES.filter(cat => selectedIndex[cat] !== undefined && categoryItems[cat]?.[selectedIndex[cat]]).length
 
   return (
-    <div className="max-w-lg mx-auto px-5 py-6 pb-nav">
-      <h1 className="font-display text-3xl text-[#0A0A0A] tracking-tight mb-2">Outfit Ideas</h1>
-      <p className="text-[#A3A3A3] text-sm mb-5">Slide, lock, and shuffle to find your look</p>
+    <div className="max-w-lg mx-auto px-5 py-6 pb-nav relative overflow-hidden">
+      {/* Floating color blobs */}
+      <Blob color="#FFE0E6" size={240} variant={1} className="-top-12 -right-20" />
+      <Blob color="#EDE9FE" size={200} variant={2} className="top-[480px] -left-16" />
 
-      {/* Body Shape Section */}
+      <h1 className="font-display text-4xl text-[#0A0A0A] tracking-tight relative z-10 leading-none">
+        <span className="wavy-underline">Outfit Ideas</span>
+      </h1>
+      <p className="text-[#A3A3A3] text-sm mb-5 mt-1.5 relative z-10">Slide, lock, and shuffle to find your look</p>
+
+      {/* Body Shape Section — squircle shape with sticker */}
       {bodyShape && shapeInfo ? (
-        <div className={`${shapeInfo.bgColor} rounded-2xl p-5 mb-4`}>
+        <div className={`${shapeInfo.bgColor} rounded-[36px] p-5 mb-4 relative z-10 shadow-soft`}>
+          <Sticker bg="#0A0A0A" text="white" rotate="right" className="absolute -top-2 -right-1 z-20">
+            {shapeInfo.name}
+          </Sticker>
           <div className="flex gap-4 items-center">
-            <div className="w-16 flex-shrink-0">
+            <div className="w-20 flex-shrink-0">
               <BodySilhouette bodyShape={bodyShape} opacity={0.9} className="w-full" />
             </div>
             <div className="flex-1">
-              <p className={`font-display text-xl ${shapeInfo.color}`}>{shapeInfo.name}</p>
-              <p className="text-[10px] font-display uppercase text-[#525252] mt-0.5">Your Shape</p>
+              <p className={`font-display text-2xl ${shapeInfo.color} leading-tight`}>{shapeInfo.name}</p>
+              <p className="text-[11px] text-[#525252] mt-1 leading-snug">{shapeInfo.description.split('.')[0]}.</p>
             </div>
           </div>
           <button onClick={() => setShowMeasurements(!showMeasurements)}
@@ -194,49 +204,73 @@ export default function RecommendPage() {
         </div>
       )}
 
-      {/* Emphasize prompt — only show if we have a body shape */}
+      {/* Wavy section divider */}
       {bodyShape && (
-        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-5 mb-4">
-          <p className="font-display text-base text-[#0A0A0A]">What do you want to emphasize?</p>
-          <p className="text-[11px] text-[#A3A3A3] mt-0.5 mb-3">Pick areas to highlight — we'll match pieces that flatter them</p>
+        <div className="relative z-10 my-3 px-4">
+          <WaveDivider color="#0A0A0A" className="opacity-20" />
+        </div>
+      )}
+
+      {/* Emphasize prompt — pill-stack with bigger touch targets */}
+      {bodyShape && (
+        <div className="bg-white rounded-[28px] p-5 mb-4 relative z-10 shadow-soft">
+          <div className="flex items-start gap-2 mb-3">
+            <span className="text-2xl">✨</span>
+            <div>
+              <p className="font-display text-lg text-[#0A0A0A] leading-tight">What do you want to emphasize?</p>
+              <p className="text-[11px] text-[#A3A3A3] mt-0.5">Pick areas to highlight</p>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2">
-            {GOALS.map(({ key, label }) => (
-              <button key={key} onClick={() => { toggleGoal(key); setTimeout(saveMeasurements, 100) }}
-                className={`px-4 py-2 rounded-full text-sm font-display transition-all ${
-                  styleGoals.includes(key) ? 'bg-[#0A0A0A] text-white' : 'bg-[#F5F5F5] text-[#525252] hover:bg-[#E5E5E5]'
-                }`}>{label}</button>
-            ))}
+            {GOALS.map(({ key, label }, i) => {
+              const selected = styleGoals.includes(key)
+              const sizes = ['text-sm', 'text-base', 'text-sm', 'text-base', 'text-sm']
+              return (
+                <button key={key} onClick={() => { toggleGoal(key); setTimeout(saveMeasurements, 100) }}
+                  className={`${sizes[i]} px-5 py-2.5 rounded-full font-display transition-all ${
+                    selected ? 'bg-[#0A0A0A] text-white shadow-pop' : 'bg-[#F5F5F5] text-[#525252] hover:bg-[#E5E5E5]'
+                  }`}>{label}</button>
+              )
+            })}
           </div>
         </div>
       )}
 
-      {/* Style Tips — visible always when we have a body shape */}
+      {/* Style Tips — bento masonry, varied shapes */}
       {bodyShape && shapeInfo && (
-        <div className="bg-white rounded-2xl border border-[#E5E5E5] p-4 mb-4">
-          <div className="mb-3">
-            <p className="font-display text-sm text-[#0A0A0A]">
-              Recommended for {shapeInfo.name}{styleGoals.length > 0 && (
-                <> + <span className={shapeInfo.color}>{styleGoals.map(g => g.charAt(0).toUpperCase() + g.slice(1)).join(', ')}</span></>
+        <div className="mb-5 relative z-10">
+          <div className="flex items-center gap-2 mb-3 px-1">
+            <Squiggle color="#FF6B35" className="w-10 h-3 flex-shrink-0" />
+            <p className="font-display text-base text-[#0A0A0A]">
+              For {shapeInfo.name}{styleGoals.length > 0 && (
+                <> &middot; <span className={shapeInfo.color}>{styleGoals.map(g => g.charAt(0).toUpperCase() + g.slice(1)).join(' + ')}</span></>
               )}
             </p>
-            {styleGoals.length === 0 && (
-              <p className="text-[11px] text-[#A3A3A3] mt-0.5">Pick what you want to highlight above to see specific picks</p>
-            )}
           </div>
-          {tips.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2">
-              {tips.slice(0, styleGoals.length > 0 ? 6 : 4).map((tip, i) => (
-                <div key={i} className="bg-[#F5F5F5] rounded-xl p-3">
-                  <div className="flex justify-center mb-2 h-12 items-center">
-                    {getPairingIcons(tip, 48)}
-                  </div>
-                  <p className="font-display text-xs leading-tight text-center">{tip.title}</p>
-                  <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5 text-center">{tip.description}</p>
-                </div>
-              ))}
+          {styleGoals.length === 0 && tips.length === 0 && (
+            <div className="bg-[#FEF9C3] rounded-[24px] p-5 text-center">
+              <p className="font-display text-sm text-[#A16207]">Pick a goal above ☝️</p>
+              <p className="text-[11px] text-[#A16207]/70 mt-1">Specific picks will appear here</p>
             </div>
-          ) : (
-            <div className="text-[11px] text-[#A3A3A3] text-center py-4">No tips yet — pick an emphasis goal above</div>
+          )}
+          {tips.length > 0 && (
+            <div className="grid grid-cols-2 gap-3">
+              {tips.slice(0, styleGoals.length > 0 ? 6 : 4).map((tip, i) => {
+                // Vary shapes for visual rhythm
+                const shapes = ['rounded-[28px]', 'bento-tr', 'bento-bl', 'rounded-[28px]', 'squircle', 'bento-br']
+                const bgs = ['bg-[#FFE0D0]', 'bg-[#E0F2FE]', 'bg-[#EDE9FE]', 'bg-[#FEF9C3]', 'bg-[#D1FAE5]', 'bg-[#FFE0E6]']
+                const tilts = ['', 'tilt-r-1', '', 'tilt-l-1', '', 'tilt-r-1']
+                return (
+                  <div key={i} className={`${bgs[i % 6]} ${shapes[i % 6]} ${tilts[i % 6]} p-4 transition-transform hover:scale-105`}>
+                    <div className="flex justify-center mb-2 h-14 items-center">
+                      {getPairingIcons(tip, 56)}
+                    </div>
+                    <p className="font-display text-sm leading-tight text-center text-[#0A0A0A]">{tip.title}</p>
+                    <p className="text-[10px] text-[#525252]/80 leading-snug mt-1 text-center">{tip.description}</p>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </div>
       )}
