@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import { Blob } from '@/components/Decorative'
-import { Tape, PhotoCorners } from '@/components/Scrapbook'
+import { Blob, Sticker } from '@/components/Decorative'
 
 interface Moment { id: string; imageUrl: string; date: string; notes?: string | null; mood?: string | null; occasion?: string | null }
 
@@ -58,36 +57,22 @@ export default function MomentsPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4 relative z-10 px-1 py-2">
+        <div className="grid grid-cols-3 gap-3 relative z-10 px-1 py-2">
           {moments.map((m, i) => {
-            // Scrapbook collage: tilts, alternating tape/corner styles
+            // Polaroid-collage feel: alternate tilts, rounded corners, white frame
             const tilts = ['tilt-l-1', 'tilt-r-1', 'tilt-l-2', 'tilt-r-2', '', 'tilt-l-1', 'tilt-r-2', '', 'tilt-l-1']
             const tilt = tilts[i % tilts.length]
-            // Alternate between tape style and photo-corner style
-            const useTape = i % 2 === 0
-            const tapeColors = ['#FFD1F1', '#B8F044', '#FFE0D0', '#7DD3FC', '#FDE047']
-            const tapeColor = tapeColors[i % tapeColors.length]
-            const tapeRotate = i % 4 === 0 ? -15 : i % 4 === 1 ? 12 : i % 4 === 2 ? -8 : 18
             return (
               <button
                 key={m.id}
                 onClick={() => setSelected(m)}
-                className={`relative bg-white p-1.5 pb-4 rounded-sm shadow-soft hover:shadow-pop transition-all ${tilt}`}
+                className={`relative bg-white p-1.5 pb-3 rounded-md shadow-soft hover:shadow-pop transition-all ${tilt}`}
               >
-                <div className="relative aspect-square overflow-hidden">
+                <div className="relative aspect-square overflow-hidden rounded-sm">
                   <img src={m.imageUrl} alt="" className="w-full h-full object-cover" />
-                  {!useTape && <PhotoCorners color="#0A0A0A" />}
                 </div>
-                {useTape && (
-                  <Tape
-                    color={tapeColor}
-                    width={48}
-                    rotate={tapeRotate}
-                    className="-top-2 left-1/2 -translate-x-1/2"
-                  />
-                )}
                 {m.mood && MOOD_EMOJIS[m.mood] && (
-                  <span className="absolute -bottom-1 -right-1 text-lg drop-shadow-md bg-white rounded-full w-7 h-7 flex items-center justify-center shadow-soft z-10">
+                  <span className="absolute -top-2 -right-2 text-lg drop-shadow-md bg-white rounded-full w-7 h-7 flex items-center justify-center shadow-soft">
                     {MOOD_EMOJIS[m.mood]}
                   </span>
                 )}
