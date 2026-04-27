@@ -20,9 +20,10 @@ interface FolderProps {
 }
 
 /**
- * File folder pocket — colored rounded rect where content visually
- * overflows the top edge, like items stuffed in a folder.
- * Inspired by Pinterest "Saved" boards.
+ * File folder pocket — solid color rounded rect with content that visually
+ * sticks UP out of the top edge. The bottom half of the peek content is
+ * HIDDEN BEHIND the folder front panel, only the top portion is visible —
+ * like items stuffed in a pocket. Inspired by Pinterest "Saved" boards.
  */
 export function Folder({
   peekContent,
@@ -37,39 +38,44 @@ export function Folder({
   return (
     <div
       onClick={onClick}
-      className={`relative ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative aspect-[5/4] ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
-      {/* Peek content — overflows above the folder pocket */}
+      {/* Peek content — extends from above the folder DOWN INTO it.
+          The portion that overlaps the folder is hidden behind it (z-0). */}
       {peekContent && (
-        <div className="absolute inset-x-0 -top-12 sm:-top-14 flex items-end justify-center px-3 z-0 pointer-events-none">
+        <div
+          className="absolute inset-x-3 z-0 flex items-end justify-center pointer-events-none"
+          style={{ top: '-55%', height: '85%' }}
+        >
           {peekContent}
         </div>
       )}
 
-      {/* Folder front face — solid color rounded rect */}
+      {/* Folder front panel — covers everything below its top edge */}
       <div
-        className="relative rounded-[28px] aspect-[5/4] flex flex-col justify-end p-4 z-10"
+        className="absolute inset-0 rounded-[28px] z-10"
         style={{
           background: color,
-          // Subtle inner top-edge shadow so the pocket reads as a pocket
-          boxShadow: 'inset 0 6px 12px -4px rgba(0,0,0,0.10), 0 8px 16px -4px rgba(0,0,0,0.08)',
+          // Inner top-edge shadow conveys pocket depth; outer drop shadow lifts the card
+          boxShadow:
+            'inset 0 8px 14px -6px rgba(0,0,0,0.18), 0 8px 16px -4px rgba(0,0,0,0.08)',
         }}
-      >
-        {/* Title + subtitle, anchored bottom-left like the reference */}
-        <div className="relative z-20" style={{ color: textColor }}>
-          <p className="font-display text-xl leading-tight">{title}</p>
-          {subtitle && (
-            <p className="text-xs mt-0.5 opacity-70">{subtitle}</p>
-          )}
-        </div>
+      />
 
-        {/* Optional badge bottom-right */}
-        {badge && (
-          <div className="absolute bottom-3 right-3 z-30">
-            {badge}
-          </div>
+      {/* Title + subtitle, anchored bottom-left on the front panel */}
+      <div className="absolute bottom-4 left-4 right-4 z-20" style={{ color: textColor }}>
+        <p className="font-display text-xl leading-tight">{title}</p>
+        {subtitle && (
+          <p className="text-xs mt-0.5 opacity-70">{subtitle}</p>
         )}
       </div>
+
+      {/* Optional badge bottom-right */}
+      {badge && (
+        <div className="absolute bottom-3 right-3 z-30">
+          {badge}
+        </div>
+      )}
     </div>
   )
 }

@@ -101,23 +101,24 @@ export default function OutfitsPage() {
                 textColor={colors.text}
                 onClick={() => {/* future: drill into outfit */}}
                 peekContent={
-                  <div className="flex items-end justify-center gap-0">
+                  <div className="flex items-end justify-center">
                     {previewItems.map((it: any, j: number) => {
-                      // Stagger photos at slight rotations and varied heights so they look stuffed in
-                      const rotations = ['-rotate-6', 'rotate-3', '-rotate-2']
-                      const offsets = ['translate-y-2', 'translate-y-0', 'translate-y-1']
-                      const widths = ['w-14', 'w-16', 'w-14']
-                      const zIdx = j === 1 ? 'z-10' : j === 0 ? 'z-0' : 'z-0'
+                      // Stagger: slight rotations, varied heights, overlapping each other
+                      const rotations = ['-rotate-6', 'rotate-3', '-rotate-3']
+                      const offsets = ['translate-y-3', 'translate-y-0', 'translate-y-2']
+                      // Taller-than-wide polaroids so a real portion sticks up above the pocket
+                      const widths = ['w-16', 'w-20', 'w-16']
+                      const zIdx = j === 1 ? 'z-20' : j === 0 ? 'z-10' : 'z-10'
                       return (
                         <div
                           key={j}
-                          className={`bg-white p-1 pb-3 rounded-sm shadow-md ${rotations[j]} ${offsets[j]} ${widths[j]} ${zIdx} ${j > 0 ? '-ml-3' : ''}`}
+                          className={`bg-white p-1.5 pb-4 rounded-sm shadow-lg ${rotations[j]} ${offsets[j]} ${widths[j]} ${zIdx} ${j > 0 ? '-ml-4' : ''}`}
                         >
-                          <div className="aspect-square bg-[#F5F5F5] overflow-hidden">
+                          <div className="aspect-[3/4] bg-[#F5F5F5] overflow-hidden">
                             {it.clothingItem?.imageUrl ? (
                               <img src={it.clothingItem.imageUrl} alt="" className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-xl">
+                              <div className="w-full h-full flex items-center justify-center text-2xl">
                                 {it.clothingItem?.category === 'tops' ? '👕' : it.clothingItem?.category === 'bottoms' ? '👖' : '🧥'}
                               </div>
                             )}
