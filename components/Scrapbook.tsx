@@ -5,70 +5,57 @@ import { ReactNode } from 'react'
 
 // ─── FOLDER ────────────────────────────────────────────────────
 interface FolderProps {
-  /** Items that "stick up" out of the folder pocket (visible above the front face) */
-  peekContent?: ReactNode
-  /** Title shown at the bottom of the folder front */
-  title: string
-  /** Subtitle (e.g., "7 items") */
-  subtitle?: string
-  /** Optional badge content in bottom-right corner (e.g., avatar / category icon) */
-  badge?: ReactNode
-  color?: string
+  label: string
+  tabColor?: string
+  bodyColor?: string
   textColor?: string
+  tilt?: 'left' | 'right' | 'none'
+  children: ReactNode
   className?: string
   onClick?: () => void
 }
 
-/**
- * File folder pocket — colored rounded rect where content visually
- * overflows the top edge, like items stuffed in a folder.
- * Inspired by Pinterest "Saved" boards.
- */
+/** Manila file folder with tab — used to display outfits like office files */
 export function Folder({
-  peekContent,
-  title,
-  subtitle,
-  badge,
-  color = '#FCD34D',
-  textColor = '#0A0A0A',
+  label,
+  tabColor = '#E8D8B7',
+  bodyColor = '#F4E9D2',
+  textColor = '#5C4A1F',
+  tilt = 'none',
+  children,
   className = '',
   onClick,
 }: FolderProps) {
+  const tiltClass = tilt === 'left' ? 'tilt-l-1' : tilt === 'right' ? 'tilt-r-1' : ''
   return (
     <div
       onClick={onClick}
-      className={`relative ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`relative ${tiltClass} ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      style={{ filter: 'drop-shadow(2px 4px 8px rgba(0,0,0,0.12))' }}
     >
-      {/* Peek content — overflows above the folder pocket */}
-      {peekContent && (
-        <div className="absolute inset-x-0 -top-12 sm:-top-14 flex items-end justify-center px-3 z-0 pointer-events-none">
-          {peekContent}
-        </div>
-      )}
-
-      {/* Folder front face — solid color rounded rect */}
+      {/* Tab — sits above the folder body, anchored left */}
       <div
-        className="relative rounded-[28px] aspect-[5/4] flex flex-col justify-end p-4 z-10"
+        className="relative h-7 px-4 flex items-center max-w-[60%]"
         style={{
-          background: color,
-          // Subtle inner top-edge shadow so the pocket reads as a pocket
-          boxShadow: 'inset 0 6px 12px -4px rgba(0,0,0,0.10), 0 8px 16px -4px rgba(0,0,0,0.08)',
+          background: tabColor,
+          color: textColor,
+          clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 100%, 0 100%)',
+          marginBottom: '-1px',
         }}
       >
-        {/* Title + subtitle, anchored bottom-left like the reference */}
-        <div className="relative z-20" style={{ color: textColor }}>
-          <p className="font-display text-xl leading-tight">{title}</p>
-          {subtitle && (
-            <p className="text-xs mt-0.5 opacity-70">{subtitle}</p>
-          )}
-        </div>
-
-        {/* Optional badge bottom-right */}
-        {badge && (
-          <div className="absolute bottom-3 right-3 z-30">
-            {badge}
-          </div>
-        )}
+        <span className="font-display text-xs uppercase tracking-wide truncate">{label}</span>
+      </div>
+      {/* Folder body */}
+      <div
+        className="rounded-tr-[18px] rounded-b-[18px] p-3 relative"
+        style={{ background: bodyColor }}
+      >
+        {/* Edge highlight (top fold) */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1 rounded-t-[18px]"
+          style={{ background: tabColor, opacity: 0.5 }}
+        />
+        {children}
       </div>
     </div>
   )
