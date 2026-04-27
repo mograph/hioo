@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useAuth } from '@/components/AuthContext'
 import { getItems, getProfile, updateProfile } from '@/lib/db'
 import { fetchWithAuth } from '@/lib/api'
@@ -11,6 +11,14 @@ import { faCamera, faArrowLeft, faWandMagicSparkles, faXmark, faShirt, faRotate 
 const CATEGORIES = ['all', 'tops', 'bottoms', 'outerwear']
 
 export default function TryOnPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="w-8 h-8 border-2 border-[#E5E5E5] border-t-[#0A0A0A] rounded-full animate-spin" /></div>}>
+      <TryOnInner />
+    </Suspense>
+  )
+}
+
+function TryOnInner() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
