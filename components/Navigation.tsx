@@ -20,7 +20,7 @@ const desktopLinks = [
   { href: '/calendar', label: 'Calendar', icon: faCalendarDays },
   { href: '/analytics', label: 'Analytics', icon: faChartLine },
   { href: '/recommend', label: 'Suggest', icon: faLightbulb },
-  { href: '/avatar', label: 'Try-On', icon: faPerson },
+  { href: '/try-on', label: 'Try-On', icon: faPerson },
 ]
 
 export default function Navigation() {

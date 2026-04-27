@@ -101,7 +101,7 @@ function AuthenticatedHome({ name }: { name: string }) {
     { href: '/calendar', title: 'Calendar', color: 'bg-[#FEF9C3]', icon: faCalendarDays, iconColor: 'text-[#A16207]' },
     { href: '/analytics', title: 'Analytics', color: 'bg-[#D1FAE5]', icon: faChartLine, iconColor: 'text-[#047857]' },
     { href: '/recommend', title: 'Suggest', color: 'bg-[#FFE0E6]', icon: faLightbulb, iconColor: 'text-[#BE123C]' },
-    { href: '/avatar', title: 'Try-On', color: 'bg-[#FFE0D0]', icon: faPerson, iconColor: 'text-[#C2410C]' },
+    { href: '/try-on', title: 'Try-On', color: 'bg-[#FFE0D0]', icon: faPerson, iconColor: 'text-[#C2410C]' },
   ]
 
   return (

@@ -4,6 +4,9 @@ import { useAuth } from '@/components/AuthContext'
 import { getItems } from '@/lib/db'
 import { useRouter } from 'next/navigation'
 import { getCategoryIcon } from '@/lib/garmentIllustrations'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 
 const CATEGORIES = ['all', 'tops', 'bottoms', 'shoes', 'accessories', 'outerwear']
 
@@ -68,13 +71,20 @@ export default function ClosetPage() {
         <div className="grid grid-cols-2 gap-3">
           {filtered.map((item: any) => (
             <div key={item.id} className="bg-white rounded-2xl border border-[#E5E5E5] overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-square bg-[#F5F5F5] flex items-center justify-center p-4">
+              <div className="relative aspect-square bg-[#F5F5F5] flex items-center justify-center p-4">
                 {item.imageUrl ? (
                   <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover rounded-xl" />
                 ) : (
                   <div className="opacity-30">
                     {getCategoryIcon(item.category, 64)}
                   </div>
+                )}
+                {item.imageUrl && ['tops', 'bottoms', 'outerwear'].includes(item.category) && (
+                  <Link href={`/try-on?item=${item.id}`}
+                    className="absolute bottom-2 right-2 bg-[#0A0A0A] text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-[#262626] shadow-md"
+                    aria-label="Try on">
+                    <FontAwesomeIcon icon={faWandMagicSparkles} className="w-3.5 h-3.5" />
+                  </Link>
                 )}
               </div>
               <div className="p-3">
