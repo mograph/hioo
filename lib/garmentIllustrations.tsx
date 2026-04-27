@@ -92,6 +92,19 @@ const ICON_MAP: [string[], string][] = [
 
   // Underwear (for completeness)
   [['bra', 'bralette', 'sports bra'], '076-brassiere.svg'],
+
+  // Accessories — no perfect match in this pack, use semantic placeholders
+  [['belt', 'cinch', 'sash', 'belted'], '081-corset.svg'],   // corset has a structured-waist look
+  [['necklace', 'chain', 'pendant'], '076-brassiere.svg'],   // closest neckline-area item
+  [['scarf', 'shawl'], '082-pyjamas.svg'],                    // flowing fabric
+  [['hat', 'cap', 'beanie'], '189-suit.svg'],                 // structured shape
+  [['bag', 'tote', 'clutch', 'purse'], '081-corset.svg'],     // structured
+
+  // Generic style cues — items that don't map to a single garment
+  [['monochrome', 'color block', 'one color'], '189-suit.svg'],  // suit = unified look
+  [['layered look', 'layering'], '107-coat-22.svg'],              // cardigan = classic layering piece
+  [['vertical detail', 'vertical line', 'stripe'], '147-shirt-1.svg'],  // button-down with vertical placket
+  [['textured', 'ribbing', 'cable knit'], '136-shirt-11.svg'],   // sweater
 ]
 
 // Category fallback icons (for closet items without photos)
@@ -129,57 +142,7 @@ export function getCategoryIcon(category: string, size = 40): JSX.Element {
   return <img src={`/garments/${file}`} alt={category} width={size} height={size} className="object-contain" />
 }
 
-// Smart pairing — figure out what the tip item IS, then pair with something complementary
-function detectItemType(title: string): 'top' | 'bottom' | 'outerwear' | 'accessory' | 'shoe' | 'dress' {
-  const t = title.toLowerCase()
-  // Check dresses first (before skirts/tops)
-  if (t.includes('dress')) return 'dress'
-  // Bottoms
-  if (t.includes('skirt') || t.includes('pant') || t.includes('trouser') || t.includes('jean') ||
-      t.includes('short') || t.includes('wide-leg') || t.includes('bootcut') || t.includes('flare') ||
-      t.includes('palazzo') || t.includes('culotte') || t.includes('legging') || t.includes('high-waist') ||
-      t.includes('slim') || t.includes('skinny') || t.includes('pencil') || t.includes('a-line') ||
-      t.includes('pleated') || t.includes('midi') || t.includes('mini skirt') || t.includes('cargo')) return 'bottom'
-  // Outerwear
-  if (t.includes('coat') || t.includes('jacket') || t.includes('blazer') || t.includes('cardigan') ||
-      t.includes('layer') || t.includes('vest') || t.includes('puffer') || t.includes('trench') ||
-      t.includes('bomber') || t.includes('duster') || t.includes('cape') || t.includes('poncho')) return 'outerwear'
-  // Accessories
-  if (t.includes('belt') || t.includes('scarf') || t.includes('necklace') || t.includes('earring') ||
-      t.includes('bag') || t.includes('hat') || t.includes('sunglasses') || t.includes('watch') ||
-      t.includes('bracelet') || t.includes('ring') || t.includes('clutch')) return 'accessory'
-  // Shoes
-  if (t.includes('heel') || t.includes('boot') || t.includes('sneaker') || t.includes('sandal') ||
-      t.includes('flat') || t.includes('loafer') || t.includes('mule') || t.includes('platform') ||
-      t.includes('shoe') || t.includes('espadrille') || t.includes('wedge')) return 'shoe'
-  // Default to top
-  return 'top'
-}
-
-// Complementary pairings that make fashion sense
-const PAIR_MAP: Record<string, string> = {
-  top: '036-trousers-6.svg',       // top → straight trousers
-  bottom: '142-shirt-5.svg',       // bottom → plain tee
-  outerwear: '036-trousers-6.svg', // outerwear → trousers
-  accessory: '197-dress.svg',      // accessory → dress
-  shoe: '036-trousers-6.svg',      // shoe → trousers
-  dress: '131-coat.svg',           // dress → coat/blazer
-}
-
-export function getPairingIcons(tip: { title: string; categories: string[] }, size = 32): JSX.Element {
-  const itemType = detectItemType(tip.title)
-  const mainIcon = getGarmentSVG(tip.title, size)
-  const pairFile = PAIR_MAP[itemType]
-
-  return (
-    <div className="flex items-center gap-1">
-      {mainIcon}
-      {pairFile && (
-        <>
-          <span className="text-[#D4D4D4] text-xs">+</span>
-          <img src={`/garments/${pairFile}`} alt="pair with" width={size} height={size} className="object-contain opacity-50" />
-        </>
-      )}
-    </div>
-  )
+// Single icon for a style tip (replaces the misleading "+ pair" layout)
+export function getPairingIcons(tip: { title: string; categories: string[] }, size = 36): JSX.Element {
+  return getGarmentSVG(tip.title, size)
 }

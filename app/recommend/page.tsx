@@ -202,15 +202,15 @@ export default function RecommendPage() {
         </div>
       )}
 
-      {/* Style Tips with garment pairing */}
+      {/* Style Tips for your shape */}
       {tips.length > 0 && !hasGenerated && (
         <div className="bg-white rounded-2xl border border-[#E5E5E5] p-4 mb-4">
-          <p className="font-display text-sm mb-3">Pair these together</p>
+          <p className="font-display text-sm mb-3">Recommended for your shape</p>
           <div className="grid grid-cols-2 gap-2">
             {tips.slice(0, 4).map((tip, i) => (
               <div key={i} className="bg-[#F5F5F5] rounded-xl p-3">
-                <div className="flex justify-center mb-2">
-                  {getPairingIcons(tip, 36)}
+                <div className="flex justify-center mb-2 h-10 items-center">
+                  {getPairingIcons(tip, 40)}
                 </div>
                 <p className="font-display text-xs leading-tight text-center">{tip.title}</p>
                 <p className="text-[9px] text-[#A3A3A3] leading-tight mt-0.5 text-center">{tip.description}</p>
