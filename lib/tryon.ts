@@ -4,12 +4,13 @@
 import { adminDb } from './firebase-admin'
 import crypto from 'crypto'
 
-export type GarmentCategory = 'upper_body' | 'lower_body' | 'overall'
+export type GarmentCategory = 'upper' | 'lower' | 'overall' | 'outer' | 'inner'
 
 export function categoryToFalCategory(category: string): GarmentCategory {
   const c = category.toLowerCase()
-  if (c === 'tops' || c === 'outerwear') return 'upper_body'
-  if (c === 'bottoms') return 'lower_body'
+  if (c === 'tops') return 'upper'
+  if (c === 'outerwear') return 'outer'
+  if (c === 'bottoms') return 'lower'
   return 'overall'
 }
 
