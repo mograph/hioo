@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useAuth } from '@/components/AuthContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera, faImages, faShirt, faGrip, faCalendarDays, faChartLine, faLightbulb, faPerson, faFlask } from '@fortawesome/free-solid-svg-icons'
-import { Blob, Sticker, Squiggle, StarBurst } from '@/components/Decorative'
 
 export default function Home() {
   const { user, loading } = useAuth()
@@ -91,107 +90,68 @@ function AuthenticatedHome({ name }: { name: string }) {
     return 'Good evening'
   }
 
-  return (
-    <div className="max-w-lg mx-auto px-5 py-6 pb-nav relative overflow-hidden">
-      {/* Floating color blobs for depth */}
-      <Blob color="#B8F044" size={260} variant={1} className="-top-20 -right-16" />
-      <Blob color="#FFE0D0" size={200} variant={2} className="top-72 -left-12" />
-      <Blob color="#EDE9FE" size={220} variant={3} className="top-[420px] -right-20" />
+  const quickActions = [
+    { href: '/capture', title: 'Capture\nMoment', color: 'bg-[#B8F044]', textColor: 'text-[#0A0A0A]', icon: faCamera },
+    { href: '/moments', title: 'My\nDiary', color: 'bg-[#FFE0D0]', textColor: 'text-[#C2410C]', icon: faImages },
+  ]
 
+  const features = [
+    { href: '/closet', title: 'My Closet', color: 'bg-[#E0F2FE]', icon: faShirt, iconColor: 'text-[#0369A1]' },
+    { href: '/outfits', title: 'Outfits', color: 'bg-[#EDE9FE]', icon: faGrip, iconColor: 'text-[#6D28D9]' },
+    { href: '/calendar', title: 'Calendar', color: 'bg-[#FEF9C3]', icon: faCalendarDays, iconColor: 'text-[#A16207]' },
+    { href: '/analytics', title: 'Analytics', color: 'bg-[#D1FAE5]', icon: faChartLine, iconColor: 'text-[#047857]' },
+    { href: '/recommend', title: 'Suggest', color: 'bg-[#FFE0E6]', icon: faLightbulb, iconColor: 'text-[#BE123C]' },
+    { href: '/try-on', title: 'Try-On', color: 'bg-[#FFE0D0]', icon: faPerson, iconColor: 'text-[#C2410C]' },
+  ]
+
+  return (
+    <div className="max-w-lg mx-auto px-5 py-6 pb-nav">
       {/* Greeting */}
-      <div className="mb-7 pt-2 relative z-10">
-        <p className="text-[#A3A3A3] font-display text-sm">{greeting()}</p>
-        <h1 className="font-display text-4xl text-[#0A0A0A] tracking-tight mt-1 leading-none">
-          <span className="wavy-underline">Hey {name}</span> 👋
+      <div className="mb-6 pt-2">
+        <p className="text-[#A3A3A3] font-display text-sm font-semibold">{greeting()}</p>
+        <h1 className="font-display text-3xl font-bold text-[#0A0A0A] tracking-tight mt-0.5">
+          {name} 👋
         </h1>
       </div>
 
-      {/* HERO: Capture (huge) + Diary (tall) — bento layout */}
-      <div className="grid grid-cols-3 gap-3 mb-3 relative z-10">
-        {/* Capture — 2 cols, big */}
-        <Link href="/capture" className="col-span-2">
-          <div className="bg-[#B8F044] rounded-[36px] p-5 h-44 flex flex-col justify-between relative overflow-hidden card-color">
-            <Sticker bg="#0A0A0A" text="#B8F044" rotate="left" className="absolute top-3 right-3">NEW</Sticker>
-            <FontAwesomeIcon icon={faCamera} className="w-9 h-9 text-[#0A0A0A]" />
-            <div>
-              <p className="font-display text-2xl text-[#0A0A0A] leading-none">Capture</p>
-              <p className="font-display text-2xl text-[#0A0A0A] leading-tight">your fit</p>
-              <Squiggle color="#0A0A0A" className="w-12 h-2 mt-1.5" />
+      {/* Quick actions — big cards */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        {quickActions.map(a => (
+          <Link key={a.href} href={a.href}>
+            <div className={`${a.color} rounded-2xl p-5 h-36 flex flex-col justify-between card-color`}>
+              <FontAwesomeIcon icon={a.icon} className={`w-7 h-7 ${a.textColor}`} />
+              <p className={`font-display text-lg font-bold leading-tight whitespace-pre-line ${a.textColor}`}>
+                {a.title}
+              </p>
             </div>
-          </div>
-        </Link>
-        {/* Diary — 1 col, tall, asymmetric */}
-        <Link href="/moments">
-          <div className="bg-[#FFE0D0] bento-tr p-4 h-44 flex flex-col justify-between card-color">
-            <FontAwesomeIcon icon={faImages} className="w-7 h-7 text-[#C2410C]" />
-            <div>
-              <p className="font-display text-lg text-[#C2410C] leading-tight">My Diary</p>
-              <p className="text-[10px] font-display uppercase text-[#C2410C]/70 mt-0.5">Photo log</p>
-            </div>
-          </div>
-        </Link>
+          </Link>
+        ))}
       </div>
 
-      {/* Wide tile: Suggest */}
-      <Link href="/recommend" className="block mb-3 relative z-10">
-        <div className="bg-[#FFE0E6] rounded-[28px] p-5 flex items-center gap-4 card-color relative overflow-hidden">
-          <div className="relative">
-            <StarBurst color="#FF8FA3" size={68} className="absolute -inset-2 -z-10" />
-            <FontAwesomeIcon icon={faLightbulb} className="w-7 h-7 text-[#BE123C] relative" />
+      {/* Features grid */}
+      <div className="grid grid-cols-3 gap-2.5">
+        {features.map(f => (
+          <Link key={f.href} href={f.href}>
+            <div className={`${f.color} rounded-2xl p-4 text-center card-color aspect-square flex flex-col items-center justify-center gap-1.5`}>
+              <FontAwesomeIcon icon={f.icon} className={`w-6 h-6 ${f.iconColor}`} />
+              <p className="font-display text-xs font-bold text-[#0A0A0A]">{f.title}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Demo data link */}
+      <Link href="/demo" className="block mt-6">
+        <div className="bg-[#F5F5F5] rounded-2xl p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#0A0A0A] flex items-center justify-center flex-shrink-0">
+            <FontAwesomeIcon icon={faFlask} className="w-5 h-5 text-white" />
           </div>
-          <div className="flex-1">
-            <p className="font-display text-xl text-[#BE123C] leading-tight">Style me today</p>
-            <p className="text-[11px] font-display text-[#BE123C]/60">Slide & shuffle outfits for your shape</p>
+          <div>
+            <p className="font-display text-sm font-bold text-[#0A0A0A]">Load Demo Data</p>
+            <p className="text-xs text-[#A3A3A3]">26 items, 8 outfits, wear history</p>
           </div>
-          <span className="text-[#BE123C] text-2xl">→</span>
         </div>
       </Link>
-
-      {/* Bento grid for remaining features — varied shapes & sizes */}
-      <div className="grid grid-cols-3 gap-3 relative z-10">
-        {/* Closet — square */}
-        <Link href="/closet">
-          <div className="bg-[#E0F2FE] rounded-[24px] p-3 aspect-square flex flex-col items-center justify-center gap-1.5 card-color">
-            <FontAwesomeIcon icon={faShirt} className="w-7 h-7 text-[#0369A1]" />
-            <p className="font-display text-xs text-[#0A0A0A]">Closet</p>
-          </div>
-        </Link>
-        {/* Try-On — circle */}
-        <Link href="/try-on">
-          <div className="bg-[#0A0A0A] rounded-full aspect-square flex flex-col items-center justify-center gap-1 card-color text-center">
-            <FontAwesomeIcon icon={faPerson} className="w-7 h-7 text-[#B8F044]" />
-            <p className="font-display text-[11px] text-white">Try-On</p>
-          </div>
-        </Link>
-        {/* Outfits — squircle */}
-        <Link href="/outfits">
-          <div className="bg-[#EDE9FE] squircle p-3 aspect-square flex flex-col items-center justify-center gap-1.5 card-color">
-            <FontAwesomeIcon icon={faGrip} className="w-7 h-7 text-[#6D28D9]" />
-            <p className="font-display text-xs text-[#0A0A0A]">Outfits</p>
-          </div>
-        </Link>
-        {/* Calendar — bento corner */}
-        <Link href="/calendar">
-          <div className="bg-[#FEF9C3] bento-bl p-3 aspect-square flex flex-col items-center justify-center gap-1.5 card-color">
-            <FontAwesomeIcon icon={faCalendarDays} className="w-7 h-7 text-[#A16207]" />
-            <p className="font-display text-xs text-[#0A0A0A]">Calendar</p>
-          </div>
-        </Link>
-        {/* Analytics — squircle */}
-        <Link href="/analytics">
-          <div className="bg-[#D1FAE5] squircle p-3 aspect-square flex flex-col items-center justify-center gap-1.5 card-color">
-            <FontAwesomeIcon icon={faChartLine} className="w-7 h-7 text-[#047857]" />
-            <p className="font-display text-xs text-[#0A0A0A]">Analytics</p>
-          </div>
-        </Link>
-        {/* Demo — circle, eye-catching */}
-        <Link href="/demo">
-          <div className="bg-[#FF6B35] rounded-full aspect-square flex flex-col items-center justify-center gap-1 card-color text-center text-white relative">
-            <FontAwesomeIcon icon={faFlask} className="w-7 h-7" />
-            <p className="font-display text-[11px]">Demo</p>
-          </div>
-        </Link>
-      </div>
     </div>
   )
 }
